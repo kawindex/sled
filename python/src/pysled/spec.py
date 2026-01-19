@@ -7,16 +7,18 @@ from typing import Dict, FrozenSet, List, Literal, Mapping, Union
 
 # Sled type groups
 
-Concrete = Union[str, bytes, float, int, bool, None]
-"""These can be a key in a map."""
-
 Entity = Union[
-    Concrete,
     Dict[str, "Entity"],
     Dict[int, "Entity"],
     List["Entity"],
+    str,
+    bytes,
+    float,
+    int,
+    bool,
+    None,
 ]
-"""These can be a value in a `map` or element in a `list`."""
+"""These can be a value in a `smap` or `imap`, or an element in a `list`."""
 
 
 # General

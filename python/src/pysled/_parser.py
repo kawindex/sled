@@ -71,7 +71,6 @@ from pysled.spec import (
     UNICODE_ESCAPE_KEY,
     UNICODE_ESCAPE_OPEN_MARK,
     Entity,
-    Concrete,
     SignType,
 )
 
@@ -427,9 +426,23 @@ class Parser:
                     f"Expected '{LIST_CLOSE_MARK}' to end list, "
                     f"but got {repr(self._peek())}."
                 )
+        elif c == KEYWORD_MARK:
+            keyword_evaluation, _ = self._parse_keyword()
+            return keyword_evaluation
+        elif c == NUMBER_START_SET:
+            number_evaluation, _ = self._parse_number_excl_keyword()
+            return number_evaluation
+        elif c in QUOTE_MARK_SET:
+            quote_evaluation, _ = self._parse_quote()
+            return quote_evaluation
+        elif c not in IDENTITY_DISALLOWED_START_SYMBOLS:
+            identity_evaluation, _ = self._parse_identity()
+            return identity_evaluation
         else:
-            concrete_evaluation, _ = self._parse_concrete()
-            return concrete_evaluation
+            raise self._make_invalid_sled_error(
+                f"Invalid entity. No entity starts with {repr(c)}."
+            )
+
 
     def _parse_map_content(
         self, key_type: Optional[SledType] = None
@@ -491,7 +504,7 @@ class Parser:
     ]:
         if key_type is None:
             # Determine key_parse_func based on first key
-            key, key_snapshot = self._parse_concrete()
+            key, key_snapshot = self._parse_map_key()
             if key_snapshot.sled_type == SledType.STRING:
                 return key, key_snapshot, self._parse_string
             elif key_snapshot.sled_type == SledType.INTEGER:
@@ -552,14 +565,26 @@ class Parser:
                     f"before the next entity, but got {repr(self._peek())}."
                 )
 
-    # `concrete` types
+    # Map keys
 
-    def _parse_concrete(self) -> Tuple[Concrete, ParseSnapshot]:
-        """Parses a `concrete`. Entry point for each key in a `map`."""
+    def _parse_map_key(self) -> Tuple[Union[int, str], ParseSnapshot]:
+        """Entry point for each key in a `map`."""
 
+        start_index = self._index
         c = self._peek()
         if c == KEYWORD_MARK:
-            return self._parse_keyword()
+            keyword_name, keyword_snapshot = self._parse_keyword_name()
+            if keyword_name != CONCAT_KEYWORD_NAME:
+                reason = (
+                    "Expected a map key, but got a non-concat keyword: "
+                    f"{self._get_range(start_index, self._index)}"
+                )
+                self._make_invalid_sled_error(
+                    reason=reason,
+                    start_index=start_index,
+                    end_index=self._index,
+                )
+            return self._handle_concat_after_keyword(keyword_snapshot)
         elif c in NUMBER_START_SET:
             return self._parse_number_excl_keyword()
         elif c in QUOTE_MARK_SET:
@@ -568,7 +593,7 @@ class Parser:
             return self._parse_identity()
         else:
             raise self._make_invalid_sled_error(
-                f"Invalid concrete. No concrete starts with {repr(c)}."
+                f"Invalid map key. No map key starts with {repr(c)}."
             )
 
     def _parse_string(self) -> Tuple[str, ParseSnapshot]:
@@ -578,7 +603,7 @@ class Parser:
             keyword_name, keyword_snapshot = self._parse_keyword_name()
             if keyword_name != CONCAT_KEYWORD_NAME:
                 reason = (
-                    f"Expected a string, but got a non-concat keyword: "
+                    "Expected a string, but got a non-concat keyword: "
                     f"{self._get_range(start_index, self._index)}"
                 )
                 self._make_invalid_sled_error(
@@ -612,7 +637,7 @@ class Parser:
         Union[str, bytes, float, bool, None], ParseSnapshot
     ]:
         """
-        Parses a `concrete` from a keyword.
+        Parses an `Entity` from a keyword.
 
         This includes any of the following:
         - `nil`: `@nil`

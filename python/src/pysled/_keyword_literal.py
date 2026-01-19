@@ -5,14 +5,14 @@ from enum import Enum
 from types import MappingProxyType
 from typing import Mapping
 
-from pysled.spec import KEYWORD_MARK, Concrete
+from pysled.spec import KEYWORD_MARK, Entity
 
 
 @dataclasses.dataclass(frozen=True, slots=True)
 class KeywordLiteralSpec:
     name: str
     lexeme: str = dataclasses.field(init=False)
-    evaluation: Concrete
+    evaluation: Entity
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "lexeme", f"{KEYWORD_MARK}{self.name}")
