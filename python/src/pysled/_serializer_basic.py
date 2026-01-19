@@ -230,9 +230,18 @@ class SledSerializerBasic:
         base_data = self._unwrap(obj)
 
         # Default serialization
-        output = self._try_base_concrete(base_data, indent)
-        if output is not None:
-            return output
+        if base_data is None:
+            return KeywordLiteral.NIL.value.lexeme
+        elif isinstance(base_data, bool):
+            return self.to_boolean(base_data)
+        elif isinstance(base_data, bytes):
+            return self.to_hex(base_data, indent)
+        elif isinstance(base_data, int):
+            return self.to_integer(base_data)
+        elif isinstance(base_data, float):
+            return self.to_float(base_data)
+        elif isinstance(base_data, str):
+            return self.to_string(base_data, indent)
         elif isinstance(base_data, Mapping):
             return self.to_map(base_data, indent)
         elif isinstance(base_data, Iterable):
@@ -249,32 +258,6 @@ class SledSerializerBasic:
             )
         else:
             return self.to_map(maybe_dict)
-
-    def to_concrete(self, obj: object, indent: str) -> str:
-        """
-        Serializes the input `obj` as a Sled `concrete`.
-
-        The input `obj` must be a `Concrete` instance,
-        WITHOUT a `to_sled_serializable()` method,
-        or an object with such a method returning such an instance.
-        """
-
-        # Allow custom method override
-        data = self._unwrap(obj)
-
-        # Default serialization
-        output = self._try_base_concrete(data, indent)
-        if output is not None:
-            return output
-        else:
-            raise TypeError(
-                "For serialization as a Sled concrete, the underlying data "
-                "to be serialized must be an instance of "
-                "str, bytes, float, int, bool, or None, "
-                f"but the input {type(obj).__name__} ({repr(obj)}) "
-                "involves serializing an instance of "
-                f"{type(data).__name__} ({repr(data)})"
-            )
 
     def _unwrap(self, obj: object) -> object:
         bound_method = getattr(
@@ -317,29 +300,6 @@ class SledSerializerBasic:
 
     def _is_dataclass_instance(self, obj: object) -> bool:
         return dataclasses.is_dataclass(obj) and not isinstance(obj, type)
-
-    def _try_base_concrete(self, obj: object, indent: str) -> Optional[str]:
-        """
-        If the input `obj` is an instance of any of the base `Concrete` types
-        (`str`, `bytes`, `float`, `int`, `bool`, `None`), serializes it
-        as a Sled `concrete`, with the given existing `indent`.
-        Otherwise, returns `None`.
-        """
-
-        if obj is None:
-            return KeywordLiteral.NIL.value.lexeme
-        elif isinstance(obj, bool):
-            return self.to_boolean(obj)
-        elif isinstance(obj, bytes):
-            return self.to_hex(obj, indent)
-        elif isinstance(obj, int):
-            return self.to_integer(obj)
-        elif isinstance(obj, float):
-            return self.to_float(obj)
-        elif isinstance(obj, str):
-            return self.to_string(obj, indent)
-        else:
-            return None
 
     def to_map(self, mapping: Mapping, indent: str) -> str:
         nested_indent = f"{indent}{self._indent}"
