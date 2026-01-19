@@ -8,7 +8,7 @@ import inspect
 import math
 from collections import Counter
 from collections.abc import Hashable, Iterable
-from typing import Mapping, Optional, TypeVar
+from typing import Dict, Mapping, Optional, TypeVar
 
 from pysled._keyword_literal import KeywordLiteral
 from pysled._sled_error import SledError, SledErrorCategory
@@ -174,7 +174,7 @@ class SledSerializerBasic:
         # Allow custom method override
         data = self._unwrap(obj)
 
-        # Default serialization
+        # Default serialization for Mapping
         if isinstance(data, Mapping):
             pairs = [
                 (self._unwrap(k), self._unwrap(v)) for k, v in data.items()
@@ -190,22 +190,22 @@ class SledSerializerBasic:
                     "but got a Mapping with the following key types: "
                     f"{key_type_names}"
                 )
-        elif (
-            dataclasses.is_dataclass(data)
-            and not isinstance(data, type)
-        ):
-            return self.to_top_level_smap(dataclasses.asdict(data))
 
-        # Invalid underlying data
-        raise TypeError(
-            f"Unable to serialize {type(data).__name__} as a Sled document. "
-            "For serialization as a full (top level) Sled document, "
-            "the underlying data to be serialized must be "
-            "a Mapping with str keys or a dataclass, "
-            f"but the input {type(obj).__name__} ({repr(obj)}) "
-            "involves serializing an instance of "
-            f"{type(data).__name__} ({repr(data)})"
-        )
+        maybe_dict = self._try_dataclass_to_dict(data)
+        if maybe_dict is None:
+            # Invalid underlying data
+            raise TypeError(
+                f"Unable to serialize {type(data).__name__} as a Sled document. "
+                "For serialization as a full (top level) Sled document, "
+                "the underlying data to be serialized must be "
+                "a Mapping with str keys or a dataclass, "
+                f"but the input {type(obj).__name__} ({repr(obj)}) "
+                "involves serializing an instance of "
+                f"{type(data).__name__} ({repr(data)})"
+            )
+        else:
+            # Default serialization for dataclass
+            return self.to_top_level_smap(maybe_dict)
 
     def to_top_level_smap(self, mapping: Mapping[str, object]) -> str:
         return self.to_top_level_smap_str(mapping) + "\n"
@@ -227,26 +227,28 @@ class SledSerializerBasic:
         """
 
         # Allow custom method override
-        data = self._unwrap(obj)
+        base_data = self._unwrap(obj)
 
         # Default serialization
-        output = self._try_base_concrete(data, indent)
+        output = self._try_base_concrete(base_data, indent)
         if output is not None:
             return output
-        elif isinstance(data, Mapping):
-            return self.to_map(data, indent)
-        elif isinstance(data, Iterable):
-            return self.to_list(data, indent)
-        elif dataclasses.is_dataclass(data) and not isinstance(data, type):
-            return self.to_map(dataclasses.asdict(data))
-        else:
+        elif isinstance(base_data, Mapping):
+            return self.to_map(base_data, indent)
+        elif isinstance(base_data, Iterable):
+            return self.to_list(base_data, indent)
+
+        maybe_dict = self._try_dataclass_to_dict(base_data)
+        if maybe_dict is None:
             raise TypeError(
                 "For serialization as a Sled entity, the underlying data "
                 "to be serialized must be of type Entity, "
                 f"but the input {type(obj).__name__} ({repr(obj)}) "
                 "involves serializing an instance of "
-                f"{type(data).__name__} ({repr(data)})"
+                f"{type(base_data).__name__} ({repr(base_data)})"
             )
+        else:
+            return self.to_map(maybe_dict)
 
     def to_concrete(self, obj: object, indent: str) -> str:
         """
@@ -304,6 +306,17 @@ class SledSerializerBasic:
             )
 
         return self._unwrap(bound_method())
+
+    def _try_dataclass_to_dict(self, obj: object) -> Optional[Dict[str, object]]:
+        if not self._is_dataclass_instance(obj):
+            return None
+        return {
+            field.name: getattr(obj, field.name)
+            for field in dataclasses.fields(obj)
+        }
+
+    def _is_dataclass_instance(self, obj: object) -> bool:
+        return dataclasses.is_dataclass(obj) and not isinstance(obj, type)
 
     def _try_base_concrete(self, obj: object, indent: str) -> Optional[str]:
         """
