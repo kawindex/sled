@@ -8,7 +8,7 @@ from typing import Mapping
 from pysled.spec import KEYWORD_MARK, Entity
 
 
-@dataclasses.dataclass(frozen=True, slots=True)
+@dataclasses.dataclass(frozen=True)
 class KeywordLiteralSpec:
     name: str
     lexeme: str = dataclasses.field(init=False)
