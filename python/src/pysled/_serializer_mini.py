@@ -29,7 +29,7 @@ other_sled_output = serializer.to_sled(other_data)
 """
 
 from collections.abc import Iterable
-from typing import Any, Mapping
+from typing import Mapping
 
 from pysled._serializer_basic import (
     DEFAULT_ALWAYS_QUOTE,
@@ -198,7 +198,7 @@ class SledSerializerMini(SledSerializerBasic):
             exponent_prefix=exponent_prefix,
         )
 
-    def to_top_level_smap(self, mapping: Mapping[str, Any]) -> str:
+    def to_top_level_smap(self, mapping: Mapping[str, object]) -> str:
         return self.to_top_level_smap_str(mapping)
 
     def to_map(self, mapping: Mapping, indent: str) -> str:
@@ -208,14 +208,14 @@ class SledSerializerMini(SledSerializerBasic):
     def _enclose_map_content(self, content: str, indent: str) -> str:
         return f"{MAP_OPEN_MARK}{content}{MAP_CLOSE_MARK}"
 
-    def to_smap_content(self, mapping: Mapping[str, Any], indent: str) -> str:
+    def to_smap_content(self, mapping: Mapping[str, object], indent: str) -> str:
         return DELIMITER_MARK.join(
             f"{self.to_string(k, self.EMPTY_INDENT)}{KEY_VALUE_SEPARATOR}"
             f"{self.to_entity(v, self.EMPTY_INDENT)}"
             for k, v in mapping.items()
         )
 
-    def to_imap_content(self, mapping: Mapping[str, Any], indent: str) -> str:
+    def to_imap_content(self, mapping: Mapping[str, object], indent: str) -> str:
         return DELIMITER_MARK.join(
             f"{self.to_integer(k)}{KEY_VALUE_SEPARATOR}"
             f"{self.to_entity(v, self.EMPTY_INDENT)}"

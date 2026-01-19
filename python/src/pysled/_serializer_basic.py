@@ -8,7 +8,7 @@ import inspect
 import math
 from collections import Counter
 from collections.abc import Hashable, Iterable
-from typing import Any, Mapping, Optional, TypeVar
+from typing import Mapping, Optional, TypeVar
 
 from pysled._keyword_literal import KeywordLiteral
 from pysled._sled_error import SledError, SledErrorCategory
@@ -207,10 +207,10 @@ class SledSerializerBasic:
             f"{type(data).__name__} ({repr(data)})"
         )
 
-    def to_top_level_smap(self, mapping: Mapping[str, Any]) -> str:
+    def to_top_level_smap(self, mapping: Mapping[str, object]) -> str:
         return self.to_top_level_smap_str(mapping) + "\n"
 
-    def to_top_level_smap_str(self, mapping: Mapping[str, Any]) -> str:
+    def to_top_level_smap_str(self, mapping: Mapping[str, object]) -> str:
         if self._use_top_level_braces:
             content = self.to_smap_content(mapping, self._indent)
             return self._enclose_map_content(content, indent="")
@@ -369,7 +369,9 @@ class SledSerializerBasic:
                 f"in the same map: {dups}"
             )
 
-    def to_smap_content(self, mapping: Mapping[str, Any], indent: str) -> str:
+    def to_smap_content(
+        self, mapping: Mapping[str, object], indent: str
+    ) -> str:
         line_separator = f"{self._line_separator}{indent}"
         return line_separator.join(
             f"{self.to_string(k, indent)} {KEY_VALUE_SEPARATOR} "
@@ -377,7 +379,9 @@ class SledSerializerBasic:
             for k, v in mapping.items()
         )
 
-    def to_imap_content(self, mapping: Mapping[int, Any], indent: str) -> str:
+    def to_imap_content(
+        self, mapping: Mapping[int, object], indent: str
+    ) -> str:
         line_separator = f"{self._line_separator}{indent}"
         return line_separator.join(
             f"{self.to_integer(k)} {KEY_VALUE_SEPARATOR} "
