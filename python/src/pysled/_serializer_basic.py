@@ -212,10 +212,10 @@ class SledSerializerBasic:
 
     def to_top_level_smap_str(self, mapping: Mapping[str, object]) -> str:
         if self._use_top_level_braces:
-            content = self.to_smap_content(mapping, self._indent)
+            content = self._to_smap_content(mapping, self._indent)
             return self._enclose_map_content(content, indent="")
         else:
-            return self.to_smap_content(mapping, indent="")
+            return self._to_smap_content(mapping, indent="")
 
     def to_entity(self, obj: object, indent: str) -> str:
         """
@@ -303,7 +303,7 @@ class SledSerializerBasic:
 
     def to_map(self, mapping: Mapping, indent: str) -> str:
         nested_indent = f"{indent}{self._indent}"
-        content = self.to_map_content(mapping, nested_indent)
+        content = self._to_map_content(mapping, nested_indent)
         return self._enclose_map_content(content, indent)
 
     def _enclose_map_content(self, content: str, indent: str) -> str:
@@ -314,14 +314,14 @@ class SledSerializerBasic:
             f"{last_line_separator}{MAP_CLOSE_MARK}"
         )
 
-    def to_map_content(self, mapping: Mapping, indent: str) -> str:
+    def _to_map_content(self, mapping: Mapping, indent: str) -> str:
         data = [(self._unwrap(k), self._unwrap(v)) for k, v in mapping.items()]
         if all(isinstance(k, str) for k, _ in data):
-            self._validate_distinct_map_keys(k for k, _ in data)
-            return self.to_smap_content(dict(data), indent)
+            self.validate_distinct_map_keys(k for k, _ in data)
+            return self._to_smap_content(dict(data), indent)
         elif all(isinstance(k, int) for k, _ in data):
-            self._validate_distinct_map_keys(k for k, _ in data)
-            return self.to_imap_content(dict(data), indent)
+            self.validate_distinct_map_keys(k for k, _ in data)
+            return self._to_imap_content(dict(data), indent)
         else:
             key_type_names = ", ".join({type(k).__name__ for k, _ in data})
             raise TypeError(
@@ -331,7 +331,7 @@ class SledSerializerBasic:
                 f"Got the following key types: {key_type_names}"
             )
 
-    def _validate_distinct_map_keys(self, it: Iterable[H]) -> None:
+    def validate_distinct_map_keys(self, it: Iterable[H]) -> None:
         tally = Counter(it)
         dups = ", ".join(
             f"{k} ({count})" for k, count in tally.items() if count > 1
@@ -342,7 +342,7 @@ class SledSerializerBasic:
                 f"in the same map: {dups}"
             )
 
-    def to_smap_content(
+    def _to_smap_content(
         self, mapping: Mapping[str, object], indent: str
     ) -> str:
         line_separator = f"{self._line_separator}{indent}"
@@ -352,7 +352,7 @@ class SledSerializerBasic:
             for k, v in mapping.items()
         )
 
-    def to_imap_content(
+    def _to_imap_content(
         self, mapping: Mapping[int, object], indent: str
     ) -> str:
         line_separator = f"{self._line_separator}{indent}"
@@ -370,7 +370,10 @@ class SledSerializerBasic:
             f"{line_separator}{self.to_entity(obj, nested_indent)}"
             for obj in it
         )
-        return f"{LIST_OPEN_MARK}{content}{last_line_separator}{LIST_CLOSE_MARK}"
+        return (
+            f"{LIST_OPEN_MARK}{content}"
+            f"{last_line_separator}{LIST_CLOSE_MARK}"
+        )
 
     def to_boolean(self, b: bool) -> str:
         return (
