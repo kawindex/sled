@@ -443,7 +443,6 @@ class Parser:
                 f"Invalid entity. No entity starts with {repr(c)}."
             )
 
-
     def _parse_map_content(
         self, key_type: Optional[SledType] = None
     ) -> Union[Dict[str, Entity], Dict[int, Entity]]:
@@ -573,6 +572,7 @@ class Parser:
         start_index = self._index
         c = self._peek()
         if c == KEYWORD_MARK:
+            self._advance()
             keyword_name, keyword_snapshot = self._parse_keyword_name()
             if keyword_name != CONCAT_KEYWORD_NAME:
                 reason = (
@@ -600,6 +600,7 @@ class Parser:
         start_index = self._index
         c = self._peek()
         if c == KEYWORD_MARK:
+            self._advance()
             keyword_name, keyword_snapshot = self._parse_keyword_name()
             if keyword_name != CONCAT_KEYWORD_NAME:
                 reason = (
@@ -628,10 +629,12 @@ class Parser:
             return evaluation, parse_snapshot
         else:
             raise self._make_invalid_sled_error(
-                f"Expected an integer, but got: {parse_snapshot.sled_type}",
+                f"Expected an integer, but got {parse_snapshot.sled_type}",
                 start_index=start_index,
                 end_index=self._index,
             )
+
+    # Keywords
 
     def _parse_keyword(self) -> Tuple[
         Union[str, bytes, float, bool, None], ParseSnapshot
@@ -655,6 +658,7 @@ class Parser:
             )
 
         start_index = self._index
+        self._advance()
         keyword_name, keyword_snapshot = self._parse_keyword_name()
 
         # Keyword literal
@@ -701,9 +705,10 @@ class Parser:
 
     def _parse_keyword_name(self) -> Tuple[str, ParseSnapshot]:
         start_index = self._index
-        while self._next() in KEYWORD_CHAR_SET:
-            pass
-        name = self._get_range(start_index+1, self._index)
+        if self._peek() in KEYWORD_CHAR_SET:
+            while self._next() in KEYWORD_CHAR_SET:
+                pass
+        name = self._get_range(start_index, self._index)
         keyword_snapshot = ParseSnapshot(
             start_index=start_index,
             end_index=self._index,
@@ -1006,6 +1011,8 @@ class Parser:
             )
         else:
             return evaluation
+
+    # `string` representations
 
     def _parse_quote(self) -> Tuple[str, ParseSnapshot]:
         """
