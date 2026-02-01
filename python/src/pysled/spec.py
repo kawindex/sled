@@ -2,12 +2,12 @@
 
 import string
 from types import MappingProxyType
-from typing import Dict, FrozenSet, List, Literal, Mapping, Union
+from typing import Dict, FrozenSet, List, Literal, Mapping, TypeAlias, Union
 
 
 # Sled type groups
 
-Entity = Union[
+Entity: TypeAlias = Union[
     Dict[str, "Entity"],
     Dict[int, "Entity"],
     List["Entity"],
@@ -18,7 +18,10 @@ Entity = Union[
     bool,
     None,
 ]
-"""These can be a value in a `smap` or `imap`, or an element in a `list`."""
+"""
+Each of these can be an element in a Sled `list`,
+or a value in a Sled `smap` or `imap`.
+"""
 
 
 # General
@@ -54,14 +57,11 @@ Additionally, the empty string is used to indicate the end of the input.
 
 # `ws`
 
-LF_LINE_SEPARATOR: "LineSeparator" = "\n"
-CR_LINE_SEPARATOR: "LineSeparator" = "\r"
-CRLF_LINE_SEPARATOR: "LineSeparator" = "\r\n"
+LineSeparator: TypeAlias = Literal["\n", "r", "\r\n"]
 
-LineSeparator = Literal[
-    LF_LINE_SEPARATOR, CR_LINE_SEPARATOR, CRLF_LINE_SEPARATOR
-]
-
+LF_LINE_SEPARATOR = "\n"
+CR_LINE_SEPARATOR = "\r"
+CRLF_LINE_SEPARATOR = "\r\n"
 DEFAULT_LINE_SEPARATOR = LF_LINE_SEPARATOR
 
 LINE_SEPARATOR_SET: FrozenSet[LineSeparator] = frozenset(LineSeparator.__args__)
@@ -101,9 +101,9 @@ DELIMITER_OR_HORIZONTAL_SPACE_SET = HORIZONTAL_SPACE_SET.union(_DELIMITER_MARK_T
 SLED_INTEGER_MIN = -9223372036854775808  # -(2 ** 63)
 SLED_INTEGER_MAX = 9223372036854775807  # 2 ** 63 - 1
 
-SignType = Literal["-", "+"]
-DecimalMarkType = Literal[".", ","]
-ExponentPrefixType = Literal["E", "e"]
+SignType: TypeAlias = Literal["-", "+"]
+DecimalMarkType: TypeAlias = Literal[".", ","]
+ExponentPrefixType: TypeAlias = Literal["E", "e"]
 
 DIGIT_SEPARATOR = "_"
 _DIGIT_SEPARATOR_TUP = (DIGIT_SEPARATOR,)
@@ -135,11 +135,12 @@ DEFAULT_HEX_LINE_LENGTH = 80
 
 # String: `identity`, `quote`, `concat`
 
+QuoteMarkType: TypeAlias = Literal["'", '"']
+QUOTE_MARK_SET: FrozenSet[QuoteMarkType] = frozenset(QuoteMarkType.__args__)
+
 SINGLE_QUOTE_MARK = "'"
 DOUBLE_QUOTE_MARK = '"'
-QuoteMarkType = Literal[SINGLE_QUOTE_MARK, DOUBLE_QUOTE_MARK]
-QUOTE_MARK_SET: FrozenSet[QuoteMarkType] = frozenset(QuoteMarkType.__args__)
-DEFAULT_QUOTE_MARK: QuoteMarkType = DOUBLE_QUOTE_MARK
+DEFAULT_QUOTE_MARK = DOUBLE_QUOTE_MARK
 
 CONCAT_KEYWORD_NAME = "concat"
 CONCAT_OPEN_MARK = OPEN_PAREN
