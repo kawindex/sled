@@ -28,7 +28,6 @@ _SPACE = " "
 
 class SledErrorCategory(Enum):
     SYNTAX = "syntax"
-    MAP_KEY_TYPE = "map key type"
     DUPLICATE_MAP_KEY = "duplicate map key"
     NUMBER_RANGE = "number range"
 

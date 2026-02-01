@@ -503,23 +503,21 @@ class Parser:
     ]:
         if key_type is None:
             # Determine key_parse_func based on first key
-            key, key_snapshot = self._parse_map_key()
-            if key_snapshot.sled_type == SledType.STRING:
-                return key, key_snapshot, self._parse_string
-            elif key_snapshot.sled_type == SledType.INTEGER:
+            c = self._peek()
+            if c in NUMBER_START_SET:  # imap
+                key, key_snapshot = self._parse_integer()
                 return key, key_snapshot, self._parse_integer
+            elif (
+                c == KEYWORD_MARK
+                or c in QUOTE_MARK_SET
+                or c not in IDENTITY_DISALLOWED_START_SYMBOLS
+            ):  # smap
+                key, key_snapshot = self._parse_string()
+                return key, key_snapshot, self._parse_string
             else:
-                reason = (
-                    "Expected map key to be either a string or integer, "
-                    f"but got: {key_snapshot.sled_type}"
-                )
                 raise self._make_invalid_sled_error(
-                    reason=reason,
-                    error_category=SledErrorCategory.MAP_KEY_TYPE,
-                    start_index=key_snapshot.start_index,
-                    end_index=key_snapshot.end_index,
-                    line_start=key_snapshot.line_start,
-                    line_num=key_snapshot.line_num,
+                    "Expected map key to be either a string or integer, "
+                    f"but neither starts with: {repr(c)}"
                 )
         elif key_type == SledType.STRING:
             key, key_snapshot = self._parse_string()
@@ -565,36 +563,6 @@ class Parser:
                 )
 
     # Map keys
-
-    def _parse_map_key(self) -> Tuple[Union[int, str], ParseSnapshot]:
-        """Entry point for each key in a `map`."""
-
-        start_index = self._index
-        c = self._peek()
-        if c == KEYWORD_MARK:
-            self._advance()
-            keyword_name, keyword_snapshot = self._parse_keyword_name()
-            if keyword_name != CONCAT_KEYWORD_NAME:
-                reason = (
-                    "Expected a map key, but got a non-concat keyword: "
-                    f"{self._get_range(start_index, self._index)}"
-                )
-                self._make_invalid_sled_error(
-                    reason=reason,
-                    start_index=start_index,
-                    end_index=self._index,
-                )
-            return self._handle_concat_after_keyword(keyword_snapshot)
-        elif c in NUMBER_START_SET:
-            return self._parse_number_excl_keyword()
-        elif c in QUOTE_MARK_SET:
-            return self._parse_quote()
-        elif c not in IDENTITY_DISALLOWED_START_SYMBOLS:
-            return self._parse_identity()
-        else:
-            raise self._make_invalid_sled_error(
-                f"Invalid map key. No map key starts with {repr(c)}."
-            )
 
     def _parse_string(self) -> Tuple[str, ParseSnapshot]:
         start_index = self._index
