@@ -623,7 +623,7 @@ class Parser:
             )
 
     def _parse_integer(self) -> Tuple[int, ParseSnapshot]:
-        start_index = self._start_index
+        start_index = self._index
         evaluation, parse_snapshot = self._parse_number_excl_keyword()
         if parse_snapshot.sled_type == SledType.INTEGER:
             return evaluation, parse_snapshot
