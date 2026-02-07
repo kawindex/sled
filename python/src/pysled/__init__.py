@@ -9,3 +9,4 @@ from pysled._parser import from_sled
 from pysled._serializer import SledSerializer, to_sled
 from pysled._serializer_basic import SLED_CUSTOM_SERIALIZATION_METHOD_NAME
 from pysled._serializer_mini import SledSerializerMini, to_sled_mini
+from pysled.spec import Entity
