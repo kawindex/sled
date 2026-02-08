@@ -1,0 +1,28 @@
+nil = @nil
+true = @true
+false = @false
+hex = @hex()
+concat = @concat()
+
+"@nil" = @nil
+"@true" = @true
+"@false" = @false
+"@hex" = @hex()
+"@hex()" = @hex()
+"@hex( )" = @hex(  )
+"@concat" = @concat()
+"@concat()" = @concat()
+"@concat(   )" = @concat( )
+
+
+# chaos reigns here
+"@@nil" = [@nil;; "hello world";@true; @false# (but in a good way)
+@nil; false;]
+"@@true" = {true = @false}; "@@false" = {false = @true;}
+"@@nan" = {
+    pi = 3.14; nan = @true
+    true = @nil;;;
+    nil = @false
+}
+"@@inf" = @nil
+"@@ninf" = {"inf" = '@inf'; '@ninf' = ninf; "ninf" = @true}
