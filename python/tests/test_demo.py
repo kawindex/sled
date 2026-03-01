@@ -57,6 +57,22 @@ class TestDemo:
                     },
                 },
             ),
+            DemoTestCase(
+                file_name="python-parser.sd",
+                expected_data={
+                    "name": "John Doe",
+                    "age": 50,
+                    "children": ["Jane", "Jimmy"],
+                },
+            ),
+            DemoTestCase(
+                file_name="python-serializer.sd",
+                expected_data={
+                    "name": "John Doe",
+                    "age": 50,
+                    "children": ["Jane", "Jimmy"],
+                },
+            ),
         ),
     )
     def demo_test_case(self, request: pytest.FixtureRequest) -> DemoTestCase:

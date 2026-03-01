@@ -5,7 +5,7 @@ Parse a Sled `document` into a Python `dict` by calling `from_sled`.
 sled_text = '''
 name = "John Doe"
 age = 50
-children = [Jane; Jimmy]
+children = [Jane ; Jimmy]
 '''
 
 data = from_sled(sled_text)
