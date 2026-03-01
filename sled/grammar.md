@@ -126,20 +126,20 @@ quoted_symbol
     "\n"
     "\r"
     "\t"
-    "\u" '{' hex_digits '}'
+    "\u" '{' optional_digit_separators hex_digit optional_hex_digits '}'
     "\\"
 
-unicode_hex
+optional_hex_digits
     ""
-    '_' unicode_hex
-    hex_digit unicode_hex
+    '_' optional_hex_digits
+    hex_digit optional_hex_digits
 
 identity_string
-    identity_start_symbol optional_bare_symbols
+    identity_start_symbol optional_identity_symbols
 
-optional_bare_symbols
+optional_identity_symbols
     ""
-    identity_symbol optional_bare_symbols
+    identity_symbol optional_identity_symbols
 
 identity_symbol
     identity_start_symbol
