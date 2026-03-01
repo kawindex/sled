@@ -3,9 +3,9 @@
 Python package for parsing Sled and serializing Python objects as Sled.
 
 
-## Parse: Sled `document` to Python `dict`
+## Parse: Sled to Python `dict`
 
-To parse a Sled `document` into a Python `dict`, call `from_sled()`.
+To parse Sled into a Python `dict`, call `from_sled()`.
 
 ```python
 from pysled import from_sled
@@ -15,7 +15,7 @@ with open("path/to/my_file.sled", mode="r") as f:
 ```
 
 
-## Serialize: Python to Sled `document`
+## Serialize: Python to Sled
 
 This package provides 2 ways to serialize Python objects.
 1. Call `to_sled()`.
@@ -58,9 +58,9 @@ as the associated Sled data type (on the right).
 - `Iterable` that is not a `Mapping`: `list`
 - dataclass: `smap`
 
-For an object to be serialized as a standalone Sled `document`,
+For an object to be serialized as a standalone Sled document,
 it should be a `Mapping[str, Entity]` or dataclass instance,
-since the top level of a Sled `document` is always a `smap`.
+since the top level of a Sled document is always a `smap`.
 
 A dataclass instance is implicitly converted into a `Mapping`
 by calling `dataclasses.fields()` (unless the original instance is itself
