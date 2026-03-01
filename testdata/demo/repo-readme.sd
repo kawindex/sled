@@ -18,12 +18,12 @@ my_list = [
   @false
 ]
 
-"The smap has string keys (the root level is itself a smap)." = {
+"This is a smap. Each key is a string. (The root level is itself a smap.)" = {
   something = xyz          # The key must be a string
   "another thing" = @true  # The value can be anything
 }
 
-"The imap has integer keys." = {
+"This is an imap. Each key is an integer." = {
   3 = @nil     # Again, the value can be anything
   -100 = 4.0   # Even an integer or float
 }
