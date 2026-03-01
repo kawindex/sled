@@ -1,6 +1,7 @@
 """Each keyword that denotes a single particular value."""
 
 import dataclasses
+import math
 from enum import Enum
 from types import MappingProxyType
 from typing import Mapping
@@ -19,9 +20,9 @@ class KeywordLiteralSpec:
 
 
 class KeywordLiteral(Enum):
-    NAN = KeywordLiteralSpec("nan", float("nan"))
-    INF = KeywordLiteralSpec("inf", float("inf"))
-    NINF = KeywordLiteralSpec("ninf", float("-inf"))
+    NAN = KeywordLiteralSpec("nan", math.nan)
+    INF = KeywordLiteralSpec("inf", math.inf)
+    NINF = KeywordLiteralSpec("ninf", -math.inf)
     TRUE = KeywordLiteralSpec("true", True)
     FALSE = KeywordLiteralSpec("false", False)
     NIL = KeywordLiteralSpec("nil", None)
