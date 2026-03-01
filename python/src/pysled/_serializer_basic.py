@@ -8,7 +8,7 @@ import inspect
 import math
 from collections import Counter
 from collections.abc import Hashable, Iterable
-from typing import Dict, Mapping, Optional, TypeVar
+from typing import Dict, Mapping, TypeVar
 
 from pysled._keyword_literal import KeywordLiteral
 from pysled._sled_error import SledError, SledErrorCategory
@@ -180,7 +180,7 @@ class SledSerializerBasic:
                 (self._unwrap(k), self._unwrap(v)) for k, v in data.items()
             ]
             if all(isinstance(k, str) for k, _ in pairs):
-                return self.to_top_level_smap(data)
+                return self.to_top_level_smap(dict(data))
             else:
                 key_type_names = ", ".join({type(k).__name__ for k, _ in data})
                 raise TypeError(
@@ -191,8 +191,11 @@ class SledSerializerBasic:
                     f"{key_type_names}"
                 )
 
-        maybe_dict = self._try_dataclass_to_dict(data)
-        if maybe_dict is None:
+        if self.is_dataclass_instance(data):
+            # Default serialization for dataclass
+            d = self.dataclass_to_dict(data)
+            return self.to_top_level_smap(d)
+        else:
             # Invalid underlying data
             raise TypeError(
                 f"Unable to serialize {type(data).__name__} as a Sled document. "
@@ -203,9 +206,6 @@ class SledSerializerBasic:
                 "involves serializing an instance of "
                 f"{type(data).__name__} ({repr(data)})"
             )
-        else:
-            # Default serialization for dataclass
-            return self.to_top_level_smap(maybe_dict)
 
     def to_top_level_smap(self, mapping: Mapping[str, object]) -> str:
         return self.to_top_level_smap_str(mapping) + "\n"
@@ -246,9 +246,10 @@ class SledSerializerBasic:
             return self.to_map(base_data, indent)
         elif isinstance(base_data, Iterable):
             return self.to_list(base_data, indent)
-
-        maybe_dict = self._try_dataclass_to_dict(base_data)
-        if maybe_dict is None:
+        elif self.is_dataclass_instance(base_data):
+            d = self.dataclass_to_dict(base_data)
+            return self.to_map(d, indent)
+        else:
             raise TypeError(
                 "For serialization as a Sled entity, the underlying data "
                 "to be serialized must be of type Entity, "
@@ -256,8 +257,6 @@ class SledSerializerBasic:
                 "involves serializing an instance of "
                 f"{type(base_data).__name__} ({repr(base_data)})"
             )
-        else:
-            return self.to_map(maybe_dict)
 
     def _unwrap(self, obj: object) -> object:
         bound_method = getattr(
@@ -290,16 +289,14 @@ class SledSerializerBasic:
 
         return self._unwrap(bound_method())
 
-    def _try_dataclass_to_dict(self, obj: object) -> Optional[Dict[str, object]]:
-        if not self._is_dataclass_instance(obj):
-            return None
+    def is_dataclass_instance(self, obj: object) -> bool:
+        return dataclasses.is_dataclass(obj) and not isinstance(obj, type)
+
+    def dataclass_to_dict(self, obj: object) -> Dict[str, object]:
         return {
             field.name: getattr(obj, field.name)
             for field in dataclasses.fields(obj)
         }
-
-    def _is_dataclass_instance(self, obj: object) -> bool:
-        return dataclasses.is_dataclass(obj) and not isinstance(obj, type)
 
     def to_map(self, mapping: Mapping, indent: str) -> str:
         nested_indent = f"{indent}{self._indent}"
