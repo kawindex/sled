@@ -2,12 +2,12 @@
 
 import string
 from types import MappingProxyType
-from typing import FrozenSet, Iterable, Literal, Mapping, TypeAlias, Union
+from typing import FrozenSet, Iterable, Literal, Mapping, Union
 
 
 # Sled type groups
 
-Entity: TypeAlias = Union[
+Entity = Union[
     Mapping[str, "Entity"],
     Mapping[int, "Entity"],
     Iterable["Entity"],
@@ -57,7 +57,7 @@ Additionally, the empty string is used to indicate the end of the input.
 
 # `ws`
 
-LineSeparator: TypeAlias = Literal["\n", "r", "\r\n"]
+LineSeparator = Literal["\n", "r", "\r\n"]
 
 LF_LINE_SEPARATOR = "\n"
 CR_LINE_SEPARATOR = "\r"
@@ -101,9 +101,9 @@ DELIMITER_OR_HORIZONTAL_SPACE_SET = HORIZONTAL_SPACE_SET.union(_DELIMITER_MARK_T
 SLED_INTEGER_MIN = -9223372036854775808  # -(2 ** 63)
 SLED_INTEGER_MAX = 9223372036854775807  # 2 ** 63 - 1
 
-SignType: TypeAlias = Literal["-", "+"]
-DecimalMarkType: TypeAlias = Literal[".", ","]
-ExponentPrefixType: TypeAlias = Literal["E", "e"]
+SignType = Literal["-", "+"]
+DecimalMarkType = Literal[".", ","]
+ExponentPrefixType = Literal["E", "e"]
 
 DIGIT_SEPARATOR = "_"
 _DIGIT_SEPARATOR_TUP = (DIGIT_SEPARATOR,)
@@ -135,7 +135,7 @@ DEFAULT_HEX_LINE_LENGTH = 80
 
 # String: `identity`, `quote`, `concat`
 
-QuoteMarkType: TypeAlias = Literal["'", '"']
+QuoteMarkType = Literal["'", '"']
 QUOTE_MARK_SET: FrozenSet[QuoteMarkType] = frozenset(QuoteMarkType.__args__)
 
 SINGLE_QUOTE_MARK = "'"
