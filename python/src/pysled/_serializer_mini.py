@@ -236,16 +236,4 @@ class SledSerializerMini(SledSerializerBasic):
         return f"{n:d}"
 
     def to_float(self, x: float) -> str:
-        return self.to_float_custom(x, use_thousands_separator=False) 
-
-    def to_string(self, s: str, indent: str) -> str:
-        if s == "":
-            # quote (identity cannot be empty)
-            return self._quote_mark * 2
-
-        identity = self._try_to_identity(s)
-        if identity != "":
-            return identity
-
-        content = self.escape_string(s)
-        return f"{self._quote_mark}{content}{self._quote_mark}"
+        return self.to_float_custom(x, use_thousands_separator=False)
