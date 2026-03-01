@@ -33,7 +33,10 @@ class SledErrorCategory(Enum):
 
 
 class SledError(Exception):
-    """Indicates a failure to parse a part of the input text."""
+    """
+    Base class for exceptions relating to Sled.
+    Indicates a failure to parse or serialize an invalid input.
+    """
 
     Self = TypeVar("Self", bound="SledError")
 
