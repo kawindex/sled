@@ -491,26 +491,21 @@ class SledSerializerBasic:
             # quote (identity cannot be empty)
             return self._quote_mark * 2
 
-        identity = self._try_to_identity(s)
-        if identity != "":
-            return identity
+        if self.use_identity(s):
+            return s
 
         content = self.escape_string(s)
         return f"{self._quote_mark}{content}{self._quote_mark}"
 
-    def _try_to_identity(self, s: str) -> str:
-        if (
-            s == ""
-            or self._always_quote
+    def use_identity(self, s: str) -> bool:
+        return not (
+            self._always_quote
+            or s == ""
             or s[0] in IDENTITY_DISALLOWED_START_SYMBOLS
             or (not IDENTITY_DISALLOWED_SYMBOLS.isdisjoint(s))
-            or any(c.isspace() for c in s)
+            or any(c.isspace() for c in s)  # not strictly necessary
             or (self._ascii_only and not s.isascii())
-        ):
-            return ""
-        else:
-            # identity
-            return s
+        )
 
     def escape_string(self, s: str) -> str:
         # First escape the escape character

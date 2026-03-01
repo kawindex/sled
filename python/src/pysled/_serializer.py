@@ -386,9 +386,8 @@ class SledSerializer(SledSerializerBasic):
             # quote (identity cannot be empty)
             return self._quote_mark * 2
 
-        identity = self._try_to_identity(s)
-        if identity != "":
-            return identity
+        if self.use_identity(s):
+            return s
 
         content = self.escape_string(s)
 
