@@ -3,12 +3,11 @@
 but should also work on its own.
 """
 
+import collections
 import dataclasses
 import inspect
 import math
-from collections import Counter
-from collections.abc import Hashable, Iterable
-from typing import Dict, Mapping, TypeVar
+from typing import Dict, Iterable, Mapping, TypeVar
 
 from pysled._keyword_literal import KeywordLiteral
 from pysled._sled_error import SledError, SledErrorCategory
@@ -62,7 +61,7 @@ DEFAULT_ALWAYS_QUOTE = False
 DEFAULT_ASCII_ONLY = False
 DEFAULT_HEX_UPPER_CASE = False
 
-H = TypeVar("H", bound=Hashable)
+H = TypeVar("H", bound=collections.abc.Hashable)
 
 
 class SledSerializerBasic:
@@ -175,7 +174,7 @@ class SledSerializerBasic:
         data = self._unwrap(obj)
 
         # Default serialization for Mapping
-        if isinstance(data, Mapping):
+        if isinstance(data, collections.abc.Mapping):
             pairs = [
                 (self._unwrap(k), self._unwrap(v)) for k, v in data.items()
             ]
@@ -213,18 +212,17 @@ class SledSerializerBasic:
 
     def to_top_level_smap_str(self, mapping: Mapping[str, object]) -> str:
         if self._use_top_level_braces:
-            content = self._to_smap_content(mapping, self._indent)
-            return self._enclose_map_content(content, indent="")
+            return self.to_smap(mapping, indent="")
         else:
-            return self._to_smap_content(mapping, indent="")
+            return self.to_smap_content(mapping, indent="")
 
     def to_entity(self, obj: object, indent: str) -> str:
         """
         Serializes the input `obj` as a Sled `entity`.
 
-        The input `obj` must be an `Entity` instance,
-        WITHOUT a `to_sled_serializable()` method,
-        or an object with such a method returning such an instance.
+        The input `obj` must either be an `Entity` instance,
+        or have a `to_sled_serializable()` method that returns
+        an `Entity` instance.
         """
 
         # Allow custom method override
@@ -243,9 +241,9 @@ class SledSerializerBasic:
             return self.to_float(base_data)
         elif isinstance(base_data, str):
             return self.to_string(base_data, indent)
-        elif isinstance(base_data, Mapping):
+        elif isinstance(base_data, collections.abc.Mapping):
             return self.to_map(base_data, indent)
-        elif isinstance(base_data, Iterable):
+        elif isinstance(base_data, collections.abc.Iterable):
             return self.to_list(base_data, indent)
         elif self.is_dataclass_instance(base_data):
             d = self.dataclass_to_dict(base_data)
@@ -300,25 +298,29 @@ class SledSerializerBasic:
         }
 
     def to_map(self, mapping: Mapping, indent: str) -> str:
-        nested_indent = f"{indent}{self._indent}"
-        content = self._to_map_content(mapping, nested_indent)
-        return self._enclose_map_content(content, indent)
+        """
+        Serializes the input `mapping` as a Sled `smap` or `imap`.
 
-    def _enclose_map_content(self, content: str, indent: str) -> str:
-        last_line_separator = f"{self._line_separator}{indent}"
-        line_separator = f"{self._line_separator}{indent}{self._indent}"
-        return (
-            f"{MAP_OPEN_MARK}{line_separator}{content}"
-            f"{last_line_separator}{MAP_CLOSE_MARK}"
-        )
+        If every key either is a `str` or has a `to_sled_serializable()` method
+        that returns a `str`, serializes to a Sled `smap`.
 
-    def _to_map_content(self, mapping: Mapping, indent: str) -> str:
-        pairs = [(self._unwrap(k), self._unwrap(v)) for k, v in mapping.items()]
+        If every key either is an `int` or has a `to_sled_serializable()` method
+        that returns an `int`, serializes to a Sled `imap`.
+
+        Otherwise, raises a `TypeError`.
+
+        The final `str`/`int` keys must all be distinct from one another.
+
+        Each value must either be an `Entity` instance,
+        or have a `to_sled_serializable()` method that returns
+        an `Entity` instance.
+        """
+        pairs = [(self._unwrap(k), v) for k, v in mapping.items()]
         self.validate_distinct_map_keys(k for k, _ in pairs)
         if all(isinstance(k, str) for k, _ in pairs):
-            return self._to_smap_content(dict(pairs), indent)
+            return self.to_smap(dict(pairs), indent)
         elif all(isinstance(k, int) for k, _ in pairs):
-            return self._to_imap_content(dict(pairs), indent)
+            return self.to_imap(dict(pairs), indent)
         else:
             key_type_names = ", ".join({type(k).__name__ for k, _ in pairs})
             raise TypeError(
@@ -328,8 +330,16 @@ class SledSerializerBasic:
                 f"Got the following key types: {key_type_names}"
             )
 
+    def _enclose_map_content(self, content: str, indent: str) -> str:
+        last_line_separator = f"{self._line_separator}{indent}"
+        line_separator = f"{self._line_separator}{indent}{self._indent}"
+        return (
+            f"{MAP_OPEN_MARK}{line_separator}{content}"
+            f"{last_line_separator}{MAP_CLOSE_MARK}"
+        )
+
     def validate_distinct_map_keys(self, it: Iterable[H]) -> None:
-        tally = Counter(it)
+        tally = collections.Counter(it)
         dups = ", ".join(
             f"{k} ({count})" for k, count in tally.items() if count > 1
         )
@@ -339,9 +349,29 @@ class SledSerializerBasic:
                 f"in the same map: {dups}"
             )
 
-    def _to_smap_content(
+    def to_smap(self, mapping: Mapping[str, object], indent: str) -> str:
+        """
+        Serializes the input `mapping` as a Sled `smap`.
+
+        Each value in the input `mapping` must either be an `Entity` instance,
+        or have a `to_sled_serializable()` method that returns
+        an `Entity` instance.
+        """
+        nested_indent = f"{indent}{self._indent}"
+        content = self.to_smap_content(mapping, nested_indent)
+        return self._enclose_map_content(content, indent)
+
+    def to_smap_content(
         self, mapping: Mapping[str, object], indent: str
     ) -> str:
+        """
+        Serializes the input `mapping` as the internal content of a Sled `smap`
+        (excluding the enclosing braces).
+
+        Each value in the input `mapping` must either be an `Entity` instance,
+        or have a `to_sled_serializable()` method that returns
+        an `Entity` instance.
+        """
         line_separator = f"{self._line_separator}{indent}"
         return line_separator.join(
             f"{self.to_string(k, indent)} {KEY_VALUE_SEPARATOR} "
@@ -349,27 +379,41 @@ class SledSerializerBasic:
             for k, v in mapping.items()
         )
 
-    def _to_imap_content(
-        self, mapping: Mapping[int, object], indent: str
-    ) -> str:
-        line_separator = f"{self._line_separator}{indent}"
-        return line_separator.join(
+    def to_imap(self, mapping: Mapping[int, object], indent: str) -> str:
+        """
+        Serializes the input `mapping` as a Sled `imap`.
+
+        Each value in the input `mapping` must either be an `Entity` instance,
+        or have a `to_sled_serializable()` method that returns
+        an `Entity` instance.
+        """
+        nested_indent = f"{indent}{self._indent}"
+        line_separator = f"{self._line_separator}{nested_indent}"
+        content = line_separator.join(
             f"{self.to_integer(k)} {KEY_VALUE_SEPARATOR} "
-            f"{self.to_entity(v, indent)}"
+            f"{self.to_entity(v, nested_indent)}"
             for k, v in mapping.items()
         )
+        return self._enclose_map_content(content, indent)
 
-    def to_list(self, it: Iterable, indent: str) -> str:
+    def to_list(self, it: Iterable[object], indent: str) -> str:
+        """
+        Serializes the input `it` as a Sled `list`.
+
+        Each element in the input `it` must either be an `Entity` instance,
+        or have a `to_sled_serializable()` method that returns
+        an `Entity` instance.
+        """
         nested_indent = f"{indent}{self._indent}"
-        last_line_separator = f"{self._line_separator}{indent}"
         line_separator = f"{self._line_separator}{nested_indent}"
+
         content = "".join(
             f"{line_separator}{self.to_entity(obj, nested_indent)}"
             for obj in it
         )
         return (
             f"{LIST_OPEN_MARK}{content}"
-            f"{last_line_separator}{LIST_CLOSE_MARK}"
+            f"{self._line_separator}{indent}{LIST_CLOSE_MARK}"
         )
 
     def to_boolean(self, b: bool) -> str:

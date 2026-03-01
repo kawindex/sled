@@ -2,15 +2,15 @@
 
 import string
 from types import MappingProxyType
-from typing import Dict, FrozenSet, List, Literal, Mapping, TypeAlias, Union
+from typing import FrozenSet, Iterable, Literal, Mapping, TypeAlias, Union
 
 
 # Sled type groups
 
 Entity: TypeAlias = Union[
-    Dict[str, "Entity"],
-    Dict[int, "Entity"],
-    List["Entity"],
+    Mapping[str, "Entity"],
+    Mapping[int, "Entity"],
+    Iterable["Entity"],
     str,
     bytes,
     float,

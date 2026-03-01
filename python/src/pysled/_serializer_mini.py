@@ -201,26 +201,29 @@ class SledSerializerMini(SledSerializerBasic):
     def to_top_level_smap(self, mapping: Mapping[str, object]) -> str:
         return self.to_top_level_smap_str(mapping)
 
-    def to_map(self, mapping: Mapping, indent: str) -> str:
-        content = self._to_map_content(mapping, self.EMPTY_INDENT)
-        return self._enclose_map_content(content, self.EMPTY_INDENT)
-
     def _enclose_map_content(self, content: str, indent: str) -> str:
         return f"{MAP_OPEN_MARK}{content}{MAP_CLOSE_MARK}"
 
-    def _to_smap_content(self, mapping: Mapping[str, object], indent: str) -> str:
+    def to_smap(self, mapping: Mapping[str, object], indent: str) -> str:
+        content = self.to_smap_content(mapping, self.EMPTY_INDENT)
+        return self._enclose_map_content(content, self.EMPTY_INDENT)
+
+    def to_smap_content(
+        self, mapping: Mapping[str, object], indent: str
+    ) -> str:
         return DELIMITER_MARK.join(
             f"{self.to_string(k, self.EMPTY_INDENT)}{KEY_VALUE_SEPARATOR}"
             f"{self.to_entity(v, self.EMPTY_INDENT)}"
             for k, v in mapping.items()
         )
 
-    def _to_imap_content(self, mapping: Mapping[str, object], indent: str) -> str:
-        return DELIMITER_MARK.join(
+    def to_imap(self, mapping: Mapping[str, object], indent: str) -> str:
+        content = DELIMITER_MARK.join(
             f"{self.to_integer(k)}{KEY_VALUE_SEPARATOR}"
             f"{self.to_entity(v, self.EMPTY_INDENT)}"
             for k, v in mapping.items()
         )
+        return self._enclose_map_content(content, self.EMPTY_INDENT)
 
     def to_list(self, it: Iterable, indent: str) -> str:
         content = DELIMITER_MARK.join(
