@@ -180,7 +180,8 @@ class SledSerializerBasic:
                 (self._unwrap(k), self._unwrap(v)) for k, v in data.items()
             ]
             if all(isinstance(k, str) for k, _ in pairs):
-                return self.to_top_level_smap(dict(data))
+                self.validate_distinct_map_keys(k for k, _ in pairs)
+                return self.to_top_level_smap(dict(pairs))
             else:
                 key_type_names = ", ".join({type(k).__name__ for k, _ in data})
                 raise TypeError(
@@ -312,15 +313,14 @@ class SledSerializerBasic:
         )
 
     def _to_map_content(self, mapping: Mapping, indent: str) -> str:
-        data = [(self._unwrap(k), self._unwrap(v)) for k, v in mapping.items()]
-        if all(isinstance(k, str) for k, _ in data):
-            self.validate_distinct_map_keys(k for k, _ in data)
-            return self._to_smap_content(dict(data), indent)
-        elif all(isinstance(k, int) for k, _ in data):
-            self.validate_distinct_map_keys(k for k, _ in data)
-            return self._to_imap_content(dict(data), indent)
+        pairs = [(self._unwrap(k), self._unwrap(v)) for k, v in mapping.items()]
+        self.validate_distinct_map_keys(k for k, _ in pairs)
+        if all(isinstance(k, str) for k, _ in pairs):
+            return self._to_smap_content(dict(pairs), indent)
+        elif all(isinstance(k, int) for k, _ in pairs):
+            return self._to_imap_content(dict(pairs), indent)
         else:
-            key_type_names = ", ".join({type(k).__name__ for k, _ in data})
+            key_type_names = ", ".join({type(k).__name__ for k, _ in pairs})
             raise TypeError(
                 f"Unable to serialize mapping as a Sled smap or imap. "
                 "For smap, every key must serialize to a string. "
