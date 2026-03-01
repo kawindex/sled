@@ -188,7 +188,7 @@ class SledError(Exception):
             f"Sled map starting on line {start_line_num} "
             f"at index {start_index_within_line} contains duplicate keys."
         )
-        raise cls(
+        return cls(
             error_message=f"{reason}\n{dup_str}",
             reason=reason,
             error_category=SledErrorCategory.DUPLICATE_MAP_KEY,
