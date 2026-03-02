@@ -3,7 +3,9 @@
 A format for representing data that developers will directly interact with, like config files.
 (Though with language models, who knows if humans will be doing this for much longer?)
 
-Sled is intended to be simple and convenient for a (human) developer to both read and write.
+Sled is intended to be simple and convenient for a human (and maybe AI-augmented) developer to both read and write.
+
+See [`pysled`](/python) for a simple parser and serializer.
 
 
 ## Sled by example
