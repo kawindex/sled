@@ -96,16 +96,17 @@ def to_sled(
     """
     Serializes the input `obj` as a (top level) Sled `document`.
 
-    This function has the same configuration options and defaults
-    as `SledSerializer`.
-    For details, refer to the `SledSerializer` documentation.
-
-    The input `obj` must be a `Mapping` or `dataclass` that does NOT have
-    a `to_sled_serializable()` method, or an object with such a method
-    returning such a `Mapping` or `dataclass`.
+    The input `obj` must be a `dataclass` or a `Mapping` where:
+    - every key must be serialized as a Sled `string`
+    - every value must either be an `Entity` instance or have a
+        `to_sled_serializable()` method that returns an `Entity` instance
 
     If the input `obj` is both a `Mapping` and a `dataclass`,
     it will be serialized as a `Mapping`.
+
+    This function has the same configuration options and defaults
+    as `SledSerializer`.
+    For details, refer to the `SledSerializer` documentation.
 
     Example:
     ```python

@@ -157,14 +157,10 @@ class SledSerializerBasic:
         """
         Serializes the input `obj` as a (top level) Sled `document`.
 
-        The input `obj` must be a `Mapping` or `dataclass` that does NOT have
-        a `to_sled_serializable()` method, or an object with such a method
-        returning such a `Mapping` or `dataclass`.
-
-        If the input `obj` is serialized as a `Mapping`, either of the following
-        must apply to all of its keys:
-        1. Every key must be serialized as a Sled `string`; or
-        2. Every key must be serialized as a Sled `integer`.
+        The input `obj` must be a `dataclass` or a `Mapping` where:
+        - every key must be serialized as a Sled `string`
+        - every value must either be an `Entity` instance or have a
+          `to_sled_serializable()` method that returns an `Entity` instance
 
         If the input `obj` is both a `Mapping` and a `dataclass`,
         it will be serialized as a `Mapping`.
