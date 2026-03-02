@@ -1,0 +1,6 @@
+nan = @nan
+inf = @inf
+pi = 3,14159 ; ninf = @ninf
+"@nan" = @nan;"-pi" = -3.14;
+"@inf" = @inf
+"@ninf" = @ninf
