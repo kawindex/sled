@@ -60,6 +60,7 @@ from pysled.spec import (
     LIST_CLOSE_MARK,
     MAP_OPEN_MARK,
     MAP_CLOSE_MARK,
+    NON_ZERO_DIGIT_SET,
     NUMBER_START_SET,
     OPTIONAL_DIGIT_SET,
     QUOTE_MARK_SET,
@@ -892,12 +893,12 @@ class Parser:
             line_start=self._line_start,
             sled_type=SledType.FLOAT,
         )
-        float_str = (
+        coefficient_str = (
             f"{sign_str}{standardized_integral_str}"
-            f"{DEFAULT_DECIMAL_MARK}{standardized_mantissa_str}{exponent_str}"
+            f"{DEFAULT_DECIMAL_MARK}{standardized_mantissa_str}"
         )
         evaluation = self._evaluate_float_excl_keyword(
-            float_str, parse_snapshot
+            coefficient_str, exponent_str, parse_snapshot
         )
         return evaluation, parse_snapshot
 
@@ -941,18 +942,22 @@ class Parser:
             raise self._make_invalid_sled_error(reason=reason)
 
     def _evaluate_float_excl_keyword(
-        self, s: str, parse_snapshot: ParseSnapshot
+        self,
+        coefficient: str,
+        exponent: str,
+        parse_snapshot: ParseSnapshot,
     ) -> float:
         """
         Evaluates a `float`, then validates that its value is not
         one that should be represented by a keyword (`@inf`, `@ninf`, `@nan`).
         """
+        float_str = f"{coefficient}{exponent}"
         try:
-            evaluation = float(s)
+            evaluation = float(float_str)
         except Exception as e:
             reason = (
                 "Invalid float. "
-                f"Python's built-in failed to convert input: {s}"
+                f"Python's built-in failed to convert input: {float_str}"
             )
             raise self._make_invalid_sled_error(
                 reason=reason,
@@ -963,11 +968,40 @@ class Parser:
                 line_num=parse_snapshot.line_num,
             ) from e
 
-        # Validate not keyword value
-        if math.isinf(evaluation) or math.isnan(evaluation):
+        # Validate range
+        if math.isinf(evaluation):
+            reason = (
+                "Detected float overflow. "
+                f"Got {evaluation} from input: {float_str}"
+            )
+            raise self._make_invalid_sled_error(
+                reason=reason,
+                error_category=SledErrorCategory.NUMBER_RANGE,
+                start_index=parse_snapshot.start_index,
+                end_index=parse_snapshot.end_index,
+                line_start=parse_snapshot.line_start,
+                line_num=parse_snapshot.line_num,
+            )
+        elif (
+            evaluation == 0.0
+            and not NON_ZERO_DIGIT_SET.isdisjoint(coefficient)
+        ):
+            reason = (
+                "Detected float underflow. "
+                f"Got {evaluation} from input: {float_str}"
+            )
+            raise self._make_invalid_sled_error(
+                reason=reason,
+                error_category=SledErrorCategory.NUMBER_RANGE,
+                start_index=parse_snapshot.start_index,
+                end_index=parse_snapshot.end_index,
+                line_start=parse_snapshot.line_start,
+                line_num=parse_snapshot.line_num,
+            )
+        elif math.isnan(evaluation):
             reason = (
                 "Invalid float. Expected a non-keyword value but "
-                f"Python's built-in converted input to {evaluation}: {s}"
+                f"got {evaluation} from input: {float_str}"
             )
             raise self._make_invalid_sled_error(
                 reason=reason,

@@ -110,6 +110,7 @@ _DIGIT_SEPARATOR_TUP = (DIGIT_SEPARATOR,)
 
 SIGN_SET: FrozenSet[SignType] = frozenset(SignType.__args__)
 DIGIT_SET = frozenset(string.digits)
+NON_ZERO_DIGIT_SET = frozenset("123456789")
 OPTIONAL_DIGIT_SET = DIGIT_SET.union(_DIGIT_SEPARATOR_TUP)
 DECIMAL_MARK_SET: FrozenSet[DecimalMarkType] = frozenset(DecimalMarkType.__args__)
 EXPONENT_PREFIX_SET: FrozenSet[ExponentPrefixType] = frozenset(ExponentPrefixType.__args__)
