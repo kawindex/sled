@@ -25,4 +25,4 @@ class TestFloatZero:
         actual_list = actual_dict[arbitrary_key]
         for actual in actual_list:
             assert isinstance(actual, float)
-            assert math.isclose(0, actual, abs_tol=1e-300)
+            assert 0.0 == actual
