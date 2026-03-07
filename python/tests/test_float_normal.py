@@ -21,8 +21,8 @@ class TestFloatNormal:
         return sled_path.read_text().strip()
 
     @pytest.fixture(scope="class")
-    def expected_dict(self, arbitrary_key: str) -> Dict[str, List[float]]:
-        expected_list = [
+    def float_values(self) -> List[float]:
+        return [
             789.0,
             271.0,
             0.987_654,
@@ -41,7 +41,13 @@ class TestFloatNormal:
             1.23e6,
             -456.0,
         ]
-        return {arbitrary_key: expected_list}
+
+    @pytest.fixture(scope="class")
+    def expected_dict(
+        self, float_values: List[float], arbitrary_key: str
+    ) -> Dict[str, List[float]]:
+        approx_list = [pytest.approx(expected) for expected in float_values]
+        return {arbitrary_key: approx_list}
 
     def test_parser(
         self,
@@ -50,39 +56,35 @@ class TestFloatNormal:
         arbitrary_key: str,
     ) -> None:
         actual_dict = pysled.from_sled(sled_text)
-        assert 1 == len(actual_dict)
+        assert expected_dict == actual_dict
         actual_list = actual_dict[arbitrary_key]
-        expected_list = expected_dict[arbitrary_key]
-        for expected, actual in zip(expected_list, actual_list):
+        for actual in actual_list:
             assert isinstance(actual, float)
-            assert math.isclose(expected, actual)
 
     def test_round_trip(
         self,
-        sled_text: str,
+        float_values: List[float],
         expected_dict: Dict[str, List[float]],
         arbitrary_key: str,
     ) -> None:
-        sled_text = pysled.to_sled(expected_dict)
+        input_dict = {arbitrary_key: float_values}
+        sled_text = pysled.to_sled(input_dict)
         round_trip_dict = pysled.from_sled(sled_text)
-        assert 1 == len(round_trip_dict)
+        assert expected_dict == round_trip_dict
         round_trip_list = round_trip_dict[arbitrary_key]
-        expected_list = expected_dict[arbitrary_key]
-        for expected, actual in zip(expected_list, round_trip_list):
+        for actual in round_trip_list:
             assert isinstance(actual, float)
-            assert math.isclose(expected, actual)
 
     def test_round_trip_mini(
         self,
-        sled_text: str,
+        float_values: List[float],
         expected_dict: Dict[str, List[float]],
         arbitrary_key: str,
     ) -> None:
-        sled_text = pysled.to_sled_mini(expected_dict)
+        input_dict = {arbitrary_key: float_values}
+        sled_text = pysled.to_sled_mini(input_dict)
         round_trip_dict = pysled.from_sled(sled_text)
-        assert 1 == len(round_trip_dict)
+        assert expected_dict == round_trip_dict
         round_trip_list = round_trip_dict[arbitrary_key]
-        expected_list = expected_dict[arbitrary_key]
-        for expected, actual in zip(expected_list, round_trip_list):
+        for actual in round_trip_list:
             assert isinstance(actual, float)
-            assert math.isclose(expected, actual)
