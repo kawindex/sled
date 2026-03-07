@@ -1,0 +1,53 @@
+dot = {
+  upper-case-exp = {
+    implicit-exp-sign = {
+      implicit-positive = 1.797693E308
+      explicit-positive = +1.797693E308
+      negative = -1.797693E308
+    }
+    explicit-exp-sign = {
+      implicit-positive = 1.797693E+308
+      explicit-positive = +1.797693E+308
+      negative = -1.797693E+308
+    }
+  }
+  lower-case-exp = {
+    implicit-exp-sign = {
+      implicit-positive = 1.797693e308
+      explicit-positive = +1.797693e308
+      negative = -1.797693e308
+    }
+    explicit-exp-sign = {
+      implicit-positive = 1.797693e+308
+      explicit-positive = +1.797693e+308
+      negative = -1.797693e+308
+    }
+  }
+}
+
+comma = {
+  upper-case-exp = {
+    implicit-exp-sign = {
+      implicit-positive = 1,797693E308
+      explicit-positive = +1,797693E308
+      negative = -1,797693E308
+    }
+    explicit-exp-sign = {
+      implicit-positive = 1,797693E+308
+      explicit-positive = +1,797693E+308
+      negative = -1,797693E+308
+    }
+  }
+  lower-case-exp = {
+    implicit-exp-sign = {
+      implicit-positive = 1,797693e308
+      explicit-positive = +1,797693e308
+      negative = -1,797693e308
+    }
+    explicit-exp-sign = {
+      implicit-positive = 1,797693e+308
+      explicit-positive = +1,797693e+308
+      negative = -1,797693e+308
+    }
+  }
+}

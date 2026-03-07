@@ -1,0 +1,73 @@
+dot = {
+  upper-case-exp = {
+    implicit-positive = {
+      near-zero = 4.95E-324
+      subnormal = 2.225E-308
+      normal = 2.2251E-308
+    }
+    explicit-positive = {
+      near-zero = +4.95E-324
+      subnormal = +2.225E-308
+      normal = +2.226E-308
+    }
+    negative = {
+      near-zero = -4.95E-324
+      subnormal = -2.225E-308
+      normal = -2.226E-308
+    }
+  }
+  lower-case-exp = {
+    implicit-positive = {
+      near-zero = 4.95e-324
+      subnormal = 2.225e-308
+      normal = 2.226e-308
+    }
+    explicit-positive = {
+      near-zero = +4.95e-324
+      subnormal = +2.225e-308
+      normal = +2.226e-308
+    }
+    negative = {
+      near-zero = -4.95e-324
+      subnormal = -2.225e-308
+      normal = -2.226e-308
+    }
+  }
+}
+
+comma = {
+  upper-case-exp = {
+    implicit-positive = {
+      near-zero = 4,95E-324
+      subnormal = 2,225E-308
+      normal = 2,226E-308
+    }
+    explicit-positive = {
+      near-zero = +4,95E-324
+      subnormal = +2,225E-308
+      normal = +2,226E-308
+    }
+    negative = {
+      near-zero = -4,95E-324
+      subnormal = -2,225E-308
+      normal = -2,226E-308
+    }
+  }
+  lower-case-exp = {
+    implicit-positive = {
+      near-zero = 4,95e-324
+      subnormal = 2,225e-308
+      normal = 2,226e-308
+    }
+    explicit-positive = {
+      near-zero = +4,95e-324
+      subnormal = +2,225e-308
+      normal = +2,226e-308
+    }
+    negative = {
+      near-zero = -4,95e-324
+      subnormal = -2,225e-308
+      normal = -2,226e-308
+    }
+  }
+}
