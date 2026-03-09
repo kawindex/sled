@@ -833,7 +833,8 @@ class Parser:
                     sled_type=SledType.FLOAT,
                 )
                 evaluation = self._evaluate_float_excl_keyword(
-                    f"{sign_str}{standardized_integral_str}{exponent_str}",
+                    f"{sign_str}{standardized_integral_str}",
+                    exponent_str,
                     parse_snapshot,
                 )
                 return evaluation, parse_snapshot
