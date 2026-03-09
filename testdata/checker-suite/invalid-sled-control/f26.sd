@@ -1,0 +1,3 @@
+"invalid escape" = "tab\\	character\\	in\\	string\\  "
+"proper escape" = "tab\tcharacter\tin\tstring\\  "
+"both" = "tab\\\tcharacter\\\tin\\\tstring\\  "
