@@ -57,7 +57,7 @@ Additionally, the empty string is used to indicate the end of the input.
 
 # `ws`
 
-LineSeparator = Literal["\n", "r", "\r\n"]
+LineSeparator = Literal["\n", "\r", "\r\n"]
 
 LF_LINE_SEPARATOR = "\n"
 CR_LINE_SEPARATOR = "\r"
