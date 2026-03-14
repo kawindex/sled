@@ -48,7 +48,7 @@ class TestFloatOutOfRange:
 
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text()
+        return sled_path.read_text().strip()
 
     def test_parse(self, sled_text: str) -> None:
         with pytest.raises(pysled.SledError) as excinfo:
@@ -63,7 +63,7 @@ class TestLargeFloat:
 
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text()
+        return sled_path.read_text().strip()
 
     @pytest.fixture(scope="class")
     def expected_data(self) -> Dict[
@@ -110,7 +110,7 @@ class TestSmallFloat:
 
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text()
+        return sled_path.read_text().strip()
     
     @pytest.fixture(scope="class")
     def expected_data(self) -> Dict[
