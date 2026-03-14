@@ -30,11 +30,11 @@ class TestDemo:
                     "boolean_false": False,
                     "distinguished_nil": None,
                     "my_list": [ "Lorem ipsum", 3.14, False ],
-                    "The smap has string keys (the root level is itself a smap).": {
+                    "This is a smap. Each key is a string. (The root level is itself a smap.)": {
                         "something": "xyz",
                         "another thing": True,
                     },
-                    "The imap has integer keys.": { 3: None, -100: 4.0 },
+                    "This is an imap. Each key is an integer.": { 3: None, -100: 4.0 },
                     "colors": [
                         "orange", "red", "green", "yellow",
                         "purple", "brown", "blue", "pink",
