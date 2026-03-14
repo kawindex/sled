@@ -50,6 +50,7 @@ from pysled.spec import (
     HEX_CHAR_SET,
     HEX_CLOSE_MARK,
     HEX_DIGIT_SET,
+    HEX_DIGIT_WITH_SEPARATOR_SET,
     HEX_KEYWORD_NAME,
     HEX_OPEN_MARK,
     HORIZONTAL_SPACE_SET,
@@ -1119,7 +1120,7 @@ class Parser:
         )
         if content_end_index == -1:
             # Report first point of failure
-            while self._next() in HEX_DIGIT_SET:
+            while self._next() in HEX_DIGIT_WITH_SEPARATOR_SET:
                 pass
             if self._is_at_end():
                 raise self._make_invalid_sled_error(
@@ -1138,9 +1139,9 @@ class Parser:
         code_point_str = self._get_range(
             content_start_index, content_end_index
         )
-        if not HEX_DIGIT_SET.issuperset(code_point_str):
+        if not HEX_DIGIT_WITH_SEPARATOR_SET.issuperset(code_point_str):
             # Report first point of failure
-            while self._next() in HEX_DIGIT_SET:
+            while self._next() in HEX_DIGIT_WITH_SEPARATOR_SET:
                 pass
             raise self._make_invalid_sled_error(
                 "Invalid Unicode escape sequence. "
