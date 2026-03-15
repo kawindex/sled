@@ -1,0 +1,54 @@
+[project]
+name = "pysled"
+version = "0.2.0"
+requires-python = ">=3.8"
+dependencies = []
+
+description = "Sled parser and serializer"
+readme = "README.md"
+authors = [
+  {name = "Kawin", email = "kawin.open@gmail.com"}
+]
+maintainers = [
+  {name = "Kawin", email = "kawin.open@gmail.com"}
+]
+license = "MIT"
+license-files = ["LICENSE"]
+
+keywords = ["sled", "parse", "serialize", "deserialize"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: File Formats",
+  "Typing :: Typed",
+
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+
+[project.urls]
+Homepage = "https://github.com/kawindex/sled"
+Source = "https://github.com/kawindex/sled.git"
+Issues = "https://github.com/kawindex/sled/issues"
+
+
+[build-system]
+requires = [ "uv_build>=0.10.0,<0.11.0" ]
+build-backend = "uv_build"
+
+
+[ dependency-groups ]
+dev = [ "pytest", "pytest-cov" ]
+
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+addopts = [
+  "--import-mode=importlib",
+]
