@@ -47,9 +47,9 @@ from pysled.spec import (
     ESCAPE_CHARACTER,
     SIMPLE_ESCAPE_EVALUATION,
     EXPONENT_PREFIX_SET,
-    HEX_CHAR_SET,
     HEX_CLOSE_MARK,
     HEX_DIGIT_SET,
+    HEX_DIGIT_HORIZONTAL_SET,
     HEX_DIGIT_WITH_SEPARATOR_SET,
     HEX_KEYWORD_NAME,
     HEX_OPEN_MARK,
@@ -689,57 +689,44 @@ class Parser:
         return name, keyword_snapshot
 
     def _parse_hex_content(self) -> bytes:
-        content_start_index = self._index
-        hex_close_index = self._text.find(
-            HEX_CLOSE_MARK, content_start_index
-        )
-        if hex_close_index == -1:
-            # Report first point of failure
-            while self._next() in HEX_CHAR_SET:
-                pass
-            if self._is_at_end():
+        content_list: List[str] = []
+        while True:
+            self._consume_optional_ws()
+            c = self._peek()
+            if c == HEX_CLOSE_MARK:
+                break
+            elif c not in HEX_DIGIT_HORIZONTAL_SET:
+                if self._is_at_end():
+                    raise self._make_invalid_sled_error(
+                        "Invalid hex. Reached end of input without finding "
+                        f"'{HEX_CLOSE_MARK}' to close hex."
+                    )
                 raise self._make_invalid_sled_error(
-                    "Invalid hex. Reached end of input without finding "
-                    f"'{HEX_CLOSE_MARK}' to end hex."
+                    f"Invalid hex. Expected only hexadecimal digits, "
+                    f"'{DIGIT_SEPARATOR}', and ws between "
+                    f"'{KEYWORD_MARK}{HEX_KEYWORD_NAME}{HEX_OPEN_MARK}' "
+                    f"and '{HEX_CLOSE_MARK}', but found {repr(c)}."
                 )
-            else:
-                raise self._make_invalid_sled_error(
-                    f"Invalid hex. Expected only '{DIGIT_SEPARATOR}', "
-                    f"hexadecimal and ws between '{HEX_OPEN_MARK}' and "
-                    f"'{HEX_CLOSE_MARK}', but found {repr(self._peek())}."
-                )
-
-        content_str = self._get_range(content_start_index, hex_close_index)
-
-        # Validate characters allowed
-        content_set = frozenset(content_str)
-        if not HEX_CHAR_SET.issuperset(content_set):
-            # Report first invalid
-            while self._next() in HEX_CHAR_SET:
+            segment_start_index = self._index
+            while self._next() in HEX_DIGIT_HORIZONTAL_SET:
                 pass
-            raise self._make_invalid_sled_error(
-                f"Invalid hex. Expected only '{DIGIT_SEPARATOR}', "
-                f"hexadecimal and ws between '{HEX_OPEN_MARK}' and "
-                f"'{HEX_CLOSE_MARK}', but found {repr(self._peek())}."
-            )
+            content_list.append(self._get_range(segment_start_index, self._index))
+
+        content_str = "".join(content_list)
 
         # Filter for only hex digits
+        content_set = frozenset(content_str)
         for c in content_set.difference(HEX_DIGIT_SET):
             content_str = content_str.replace(c, "")
 
         # Validate full bytes (even number of hex digits)
         if len(content_str) % 2 != 0:
-            reason = (
+            raise self._make_invalid_sled_error(
                 "Invalid hex. Expected an even number of hexadecimal digits "
                 f"for full bytes of data, but got {len(content_str)} "
                 "hexadecimal digits."
             )
-            raise self._make_invalid_sled_error(
-                reason=reason,
-                end_index=hex_close_index,
-            )
 
-        self._index = hex_close_index
         return bytes.fromhex(content_str)
 
     def _handle_concat_after_keyword(
