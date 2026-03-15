@@ -1,0 +1,27 @@
+
+hexed = @hex(ed)
+Sled = @hex(51ed)
+dEcaDE = @hex(dEcaDE)
+enlarge = @hex(0123456789ABCDEF)
+shrink = @hex( fedcba_987	654 32 10	)
+
+FOOSball = @hex(F005ba11_)
+daffodil = @hex(DAFF0D11)
+access = @hex(aCCe55)
+FEEL = @hex(fee1)
+DIABOLICAL = @hex(D1AB0	11CA1)
+
+Scaffold = @hex(#immediate comment
+5ca ff 01d)
+
+"multiple lines" = @hex(__5ca1ab1e
+  ca11ab1e
+  ABcdeF
+  # This can have
+  abCDEf
+  8765 # comments too!
+  c1A551C
+  0A515#
+  cafeDEC#!
+  _1DE_1DEA	 1eaf
+)

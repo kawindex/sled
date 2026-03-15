@@ -1,0 +1,12 @@
+"nothing" = @hex()
+"underscore" = @hex(_)
+"space" = @hex( )
+"tabs" = @hex(			)
+"line" = @hex(
+)
+"ws" = @hex(
+	# We can even
+  	# insert comments!
+)
+"mix" = @hex(		_   _
+	__ 	_)
