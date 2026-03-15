@@ -167,9 +167,14 @@ class Parser:
             # Validate and consume close brace
             if self._peek() == MAP_CLOSE_MARK:
                 self._advance()
+            elif self._is_at_end():
+                raise self._make_invalid_sled_error(
+                    "Reached end of input without finding "
+                    f"'{MAP_CLOSE_MARK}' to close top-level map."
+                )
             else:
                 raise self._make_invalid_sled_error(
-                    f"Expected '{MAP_CLOSE_MARK}' to end top-level map "
+                    f"Expected '{MAP_CLOSE_MARK}' to close top-level map "
                     f"but got {repr(self._peek())}."
                 )
 
@@ -412,9 +417,14 @@ class Parser:
             if self._peek() == MAP_CLOSE_MARK:
                 self._advance()
                 return content
+            elif self._is_at_end():
+                raise self._make_invalid_sled_error(
+                    "Reached end of input without finding "
+                    f"'{MAP_CLOSE_MARK}' to close map."
+                )
             else:
                 raise self._make_invalid_sled_error(
-                    f"Expected '{MAP_CLOSE_MARK}' to end map, "
+                    f"Expected '{MAP_CLOSE_MARK}' to close map, "
                     f"but got {repr(self._peek())}."
                 )
         elif c == LIST_OPEN_MARK:
@@ -423,9 +433,14 @@ class Parser:
             if self._peek() == LIST_CLOSE_MARK:
                 self._advance()
                 return content
+            elif self._is_at_end():
+                raise self._make_invalid_sled_error(
+                    "Reached end of input without finding "
+                    f"'{LIST_CLOSE_MARK}' to close list."
+                )
             else:
                 raise self._make_invalid_sled_error(
-                    f"Expected '{LIST_CLOSE_MARK}' to end list, "
+                    f"Expected '{LIST_CLOSE_MARK}' to close list, "
                     f"but got {repr(self._peek())}."
                 )
         elif c == KEYWORD_MARK:
@@ -457,7 +472,7 @@ class Parser:
         start_line_num = self._line_num
         self._consume_optional_ws_or_delimiters()
         c = self._peek()
-        if c == MAP_CLOSE_MARK or c == "":
+        if c == MAP_CLOSE_MARK or self._is_at_end():
             return {}
 
         # Resolve key_parse_func.
@@ -472,9 +487,9 @@ class Parser:
         while True:
             ws = self._consume_optional_ws_or_delimiters()
             c = self._peek()
-            if c == MAP_CLOSE_MARK or c == "":
+            if c == MAP_CLOSE_MARK or self._is_at_end():
                 break
-            if DELIMITER_SET.isdisjoint(ws):
+            elif DELIMITER_SET.isdisjoint(ws):
                 raise self._make_invalid_sled_error(
                     f"Expected either the end of the map, or a delimiter "
                     f"('{DELIMITER_MARK}' or a line separator) before "
@@ -536,6 +551,10 @@ class Parser:
     def _parse_map_pair_after_key(self) -> Entity:
         self._consume_optional_ws()
         if self._peek() != KEY_VALUE_SEPARATOR:
+            if self._is_at_end():
+                raise self._make_invalid_sled_error(
+                    "Reached end of input without completing key-value pair."
+                )
             raise self._make_invalid_sled_error(
                 f"Expected '{KEY_VALUE_SEPARATOR}' between key and value, "
                 f"but got {repr(self._peek())}."
@@ -557,9 +576,14 @@ class Parser:
             ws = self._consume_optional_ws_or_delimiters()
             if self._peek() == LIST_CLOSE_MARK:
                 return content
-            if DELIMITER_SET.isdisjoint(ws):
+            elif self._is_at_end():
                 raise self._make_invalid_sled_error(
-                    f"Expected either '{LIST_CLOSE_MARK}' to end the list, "
+                    "Reached end of input without finding "
+                    f"'{LIST_CLOSE_MARK}' to close list."
+                )
+            elif DELIMITER_SET.isdisjoint(ws):
+                raise self._make_invalid_sled_error(
+                    f"Expected either '{LIST_CLOSE_MARK}' to close the list, "
                     f"or a delimiter ('{DELIMITER_MARK}' or a line separator) "
                     f"before the next entity, but got {repr(self._peek())}."
                 )
@@ -640,6 +664,10 @@ class Parser:
         if keyword_name == HEX_KEYWORD_NAME:
             self._consume_optional_ws()
             if self._peek() != HEX_OPEN_MARK:
+                if self._is_at_end():
+                    raise self._make_invalid_sled_error(
+                        "Reached end of input without starting hex."
+                    )
                 raise self._make_invalid_sled_error(
                     f"Expected '{HEX_OPEN_MARK}' to start hex, "
                     f"but got {repr(self._peek())}."
@@ -655,9 +683,13 @@ class Parser:
                     line_start=keyword_snapshot.line_start,
                     sled_type=SledType.HEX,
                 )
+            elif self._is_at_end():
+                raise self._make_invalid_sled_error(
+                    "Reached end of input without closing hex."
+                )
             else:
                 raise self._make_invalid_sled_error(
-                    f"Expected '{HEX_CLOSE_MARK}' to end hex, "
+                    f"Expected '{HEX_CLOSE_MARK}' to close hex, "
                     f"but got {repr(self._peek())}."
                 )
 
@@ -749,9 +781,14 @@ class Parser:
                 line_start=keyword_snapshot.line_start,
                 sled_type=SledType.STRING,
             )
+        elif self._is_at_end():
+            raise self._make_invalid_sled_error(
+                f"Reached end of input without finding '{CONCAT_CLOSE_MARK}' "
+                "to close concat."
+            )
         else:
             raise self._make_invalid_sled_error(
-                f"Expected '{CONCAT_CLOSE_MARK}' to end concat, "
+                f"Expected '{CONCAT_CLOSE_MARK}' to close concat, "
                 f"but got {repr(self._peek())}."
             )
 
@@ -763,19 +800,29 @@ class Parser:
         content: List[str] = []
         while True:
             if self._peek() not in QUOTE_MARK_SET:
+                if self._is_at_end():
+                    raise self._make_invalid_sled_error(
+                        f"Reached end of input without finding '{CONCAT_CLOSE_MARK}' "
+                        "to close concat."
+                    )
                 raise self._make_invalid_sled_error(
                     "Expected either a quote mark (single or double) "
                     f"to start a quote, or '{CONCAT_CLOSE_MARK}' "
-                    f"to end the concat, but got {repr(self._peek())}."
+                    f"to close the concat, but got {repr(self._peek())}."
                 )
             quote, _ = self._parse_quote()
             content.append(quote)
             ws = self._consume_optional_ws_or_delimiters()
             if self._peek() == CONCAT_CLOSE_MARK:
                 return "".join(content)
-            if DELIMITER_SET.isdisjoint(ws):
+            elif DELIMITER_SET.isdisjoint(ws):
+                if self._is_at_end():
+                    raise self._make_invalid_sled_error(
+                        f"Reached end of input without finding '{CONCAT_CLOSE_MARK}' "
+                        "to close concat."
+                    )
                 raise self._make_invalid_sled_error(
-                    f"Expected either '{CONCAT_CLOSE_MARK}' to end "
+                    f"Expected either '{CONCAT_CLOSE_MARK}' to close "
                     f"the concat, or a delimiter ('{DELIMITER_MARK}' "
                     f"or a line separator) before the next segment, "
                     f"but got {repr(self._peek())}."
@@ -924,11 +971,10 @@ class Parser:
         if len(exponent_digit_str) > 0:
             return f"{exponent_prefix}{sign_str}{exponent_digit_str}"
         else:
-            reason = (
+            raise self._make_invalid_sled_error(
                 "Invalid exponent. Expected at least 1 digit in the exponent "
                 f"(after '{exponent_prefix}{sign_str}')."
             )
-            raise self._make_invalid_sled_error(reason=reason)
 
     def _evaluate_float_excl_keyword(
         self,
@@ -1043,7 +1089,7 @@ class Parser:
                 break
             elif c == ESCAPE_CHARACTER:
                 pieces.append(self._parse_escape_sequence())
-            elif c == "":
+            elif self._is_at_end():
                 raise self._make_invalid_sled_error(
                     f"Reached end of file without finding {repr(quote_mark)}"
                     " to end quote."
@@ -1080,21 +1126,26 @@ class Parser:
             return evaluation
 
         # Unicode escape sequences
-        if c == UNICODE_ESCAPE_KEY:
+        if c == UNICODE_ESCAPE_KEY and self._next() == UNICODE_ESCAPE_OPEN_MARK:
             return self._parse_unicode_escape_content()
 
-        reason = (
-            f"Invalid escape sequence. No escape sequence "
-            f"has the escape character followed by {repr(c)}."
-        )
-        raise self._make_invalid_sled_error(
-            reason=reason,
-            start_index=self._index - 1,
-            end_index=self._index + 1,
-        )
+        if self._is_at_end():
+            raise self._make_invalid_sled_error(
+                "Reached end of input without completing escape sequence."
+            )
+        else:
+            reason = (
+                f"Invalid escape sequence. No escape sequence "
+                f"has the escape character followed by {repr(c)}."
+            )
+            raise self._make_invalid_sled_error(
+                reason=reason,
+                start_index=self._index - 1,
+                end_index=self._index + 1,
+            )
 
     def _parse_unicode_escape_content(self) -> str:
-        if self._next() != UNICODE_ESCAPE_OPEN_MARK:
+        if self._peek() != UNICODE_ESCAPE_OPEN_MARK:
             raise self._make_invalid_sled_error(
                 f"Expected '{UNICODE_ESCAPE_OPEN_MARK}' after "
                 f'"{ESCAPE_CHARACTER}{UNICODE_ESCAPE_KEY}", '
@@ -1113,7 +1164,7 @@ class Parser:
                 raise self._make_invalid_sled_error(
                     "Invalid Unicode escape sequence. "
                     "Reached end of input without finding "
-                    f"'{UNICODE_ESCAPE_CLOSE_MARK}' to end "
+                    f"'{UNICODE_ESCAPE_CLOSE_MARK}' to close "
                     "escape sequence for Unicode code point."
                 )
             else:
