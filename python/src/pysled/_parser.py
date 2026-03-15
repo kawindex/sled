@@ -855,7 +855,7 @@ class Parser:
                 raise self._make_invalid_sled_error(
                     reason=_INVALID_NUMBER_COEFFICIENT_ERROR_REASON,
                     start_index=coefficient_start_index,
-                    end_index=self._index,
+                    end_index=max(self._index, coefficient_start_index+1),
                 )
             if c in EXPONENT_PREFIX_SET:
                 # `float`: no decimal, has exponent
@@ -1190,7 +1190,7 @@ class Parser:
             )
 
         self._index = content_end_index + 1
-        return chr(int(code_point_str, base=16))
+        return chr(int(code_point_str.replace(DIGIT_SEPARATOR, ""), base=16))
 
     def _parse_identity(self) -> Tuple[str, ParseSnapshot]:
         """
