@@ -1,0 +1,1 @@
+data = @concat(hello\u{3}world)
