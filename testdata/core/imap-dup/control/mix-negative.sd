@@ -1,0 +1,4 @@
+data = {
+  _-0_172_9_ = "Hello, World!"
+  -___1__728 = @concat( "Hello, " ; "World!" )
+}
