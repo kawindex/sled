@@ -1,0 +1,56 @@
+name: Python test
+on:
+  workflow_call:
+
+jobs:
+  python-test:
+    name: Python 3.8-3.14 test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
+      UV_MANAGED_PYTHON: true
+
+    steps:
+      - name: Checkout python and testdata directories
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            python/
+            testdata/
+
+      - name: Log commit SHA
+        run: 'echo "commit SHA: $GITHUB_SHA"'
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.9.30"
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python
+        working-directory: ${{ github.workspace }}/python
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Set up project environment
+        working-directory: ${{ github.workspace }}/python
+        run: uv sync
+
+      - name: Run pytest
+        working-directory: ${{ github.workspace }}/python
+        run: >
+          uv run pytest
+          --cov=pysled
+          --cov-report=term-missing
+          --cov-report=markdown-append:$GITHUB_STEP_SUMMARY
+          tests/
