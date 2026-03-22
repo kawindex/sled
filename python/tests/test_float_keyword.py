@@ -1,46 +1,91 @@
 import math
 from pathlib import Path
+from typing import Dict
 
 import pytest
 
 import pysled
 
 
-class TestFloatKeyword:
-    @pytest.fixture(scope="class")
-    def sled_path(self, core_test_data_dir: Path) -> Path:
-        return core_test_data_dir.joinpath("float-keyword.sd")
+@pytest.fixture(scope="module")
+def float_keyword_test_data_dir(core_test_data_dir: Path) -> Path:
+    return core_test_data_dir.joinpath("float-keyword")
+
+class TestFloatKeywordInvalid:
+    @pytest.fixture(scope="class", params=("neg", "pos"))
+    def sign(self, request: pytest.FixtureRequest) -> str:
+        return request.param
+
+    @pytest.fixture(scope="class", params=("sign", "keyword"))
+    def invalid_component(self, request: pytest.FixtureRequest) -> str:
+        return request.param
+
+    @pytest.fixture(scope="class", params=("inf", "ninf", "nan"))
+    def base_keyword(self, request: pytest.FixtureRequest) -> str:
+        return request.param
 
     @pytest.fixture(scope="class")
-    def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text().strip()
+    def invalid_sled_path(
+        self,
+        invalid_component: str,
+        sign: str,
+        base_keyword: str,
+        float_keyword_test_data_dir: Path,
+    ) -> Path:
+        sled_file_name = f"invalid-{invalid_component}-{sign}-{base_keyword}.sd"
+        return float_keyword_test_data_dir.joinpath(sled_file_name)
 
-    def test_parse(self, sled_text: str) -> None:
-        d = pysled.from_sled(sled_text)
+    @pytest.fixture(scope="class")
+    def invalid_sled_text(self, invalid_sled_path: Path) -> str:
+        return invalid_sled_path.read_text().strip()
 
-        assert 8 == len(d)
+    def test_parse_invalid(self, invalid_sled_text: str) -> None:
+        with pytest.raises(pysled.SledError) as excinfo:
+            pysled.from_sled(invalid_sled_text)
+        assert pysled.SledErrorCategory.SYNTAX == excinfo.value.error_category
 
-        for k in ("nan", "@nan"):
-            v = d[k]
-            assert isinstance(v, float)
-            assert math.isnan(v)
 
-        for k in ("inf", "@inf"):
-            v = d[k]
-            assert isinstance(v, float)
-            assert math.isinf(v)
-            assert v > 0
+class TestFloatKeywordValid:
+    @pytest.fixture(scope="class")
+    def valid_sled_path(self, float_keyword_test_data_dir: Path) -> str:
+        return float_keyword_test_data_dir.joinpath("valid.sd")
 
-        for k in ("ninf", "@ninf"):
-            v = d[k]
-            assert isinstance(v, float)
-            assert math.isinf(v)
-            assert v < 0
+    @pytest.fixture(scope="class")
+    def valid_sled_text(self, valid_sled_path: Path) -> str:
+        return valid_sled_path.read_text().strip()
 
-        pi = d["pi"]
-        assert isinstance(pi, float)
-        assert math.isclose(3.14159, pi)
+    def test_valid(self, valid_sled_text: str) -> None:
+        d = pysled.from_sled(valid_sled_text)
+        check_float_keyword_valid(d)
+        round_trip_sled_text = pysled.to_sled(d)
+        round_trip_data = pysled.from_sled(round_trip_sled_text)
+        check_float_keyword_valid(round_trip_data)
 
-        neg_pi = d["-pi"]
-        assert isinstance(neg_pi, float)
-        assert math.isclose(-3.14, neg_pi)
+
+def check_float_keyword_valid(d: Dict[str, pysled.Entity]) -> None:
+    assert 11 == len(d)
+
+    for k in ("inf", "@inf", "x"):
+        v = d[k]
+        assert isinstance(v, float)
+        assert math.isinf(v)
+        assert v > 0
+
+    for k in ("ninf", "@ninf", "y"):
+        v = d[k]
+        assert isinstance(v, float)
+        assert math.isinf(v)
+        assert v < 0
+
+    for k in ("nan", "@nan", "z"):
+        v = d[k]
+        assert isinstance(v, float)
+        assert math.isnan(v)
+
+    pi = d["pi"]
+    assert isinstance(pi, float)
+    assert math.isclose(3.14159, pi)
+
+    neg_pi = d["-pi"]
+    assert isinstance(neg_pi, float)
+    assert math.isclose(-3.14, neg_pi)

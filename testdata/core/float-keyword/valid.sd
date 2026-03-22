@@ -4,3 +4,7 @@ pi = 3,14159 ; ninf = @ninf
 "@nan" = @nan;"-pi" = -3.14;
 "@inf" = @inf
 "@ninf" = @ninf
+
+x = @inf
+y = @ninf
+z = @nan
