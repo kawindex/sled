@@ -1,0 +1,12 @@
+name: Python PR
+run-name: Python PR for ${{ github.ref_name }}
+on:
+  pull_request:
+    paths:
+      - python/**
+      - testdata/**
+
+jobs:
+  invoke-python-test:
+    name: Invoke Python test
+    uses: ./.github/workflows/python-test.yml
