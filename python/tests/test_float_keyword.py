@@ -25,37 +25,38 @@ class TestFloatKeywordInvalid:
         return request.param
 
     @pytest.fixture(scope="class")
-    def invalid_sled_path(
+    def sled_path(
         self,
         invalid_component: str,
         sign: str,
         base_keyword: str,
         float_keyword_test_data_dir: Path,
     ) -> Path:
-        sled_file_name = f"invalid-{invalid_component}-{sign}-{base_keyword}.sd"
-        return float_keyword_test_data_dir.joinpath(sled_file_name)
+        return float_keyword_test_data_dir.joinpath(
+            f"invalid-{invalid_component}-{sign}-{base_keyword}.sd"
+        )
 
     @pytest.fixture(scope="class")
-    def invalid_sled_text(self, invalid_sled_path: Path) -> str:
-        return invalid_sled_path.read_text().strip()
+    def sled_text(self, sled_path: Path) -> str:
+        return sled_path.read_text().strip()
 
-    def test_parse_invalid(self, invalid_sled_text: str) -> None:
+    def test_parse_invalid(self, sled_text: str) -> None:
         with pytest.raises(pysled.SledError) as excinfo:
-            pysled.from_sled(invalid_sled_text)
+            pysled.from_sled(sled_text)
         assert pysled.SledErrorCategory.SYNTAX == excinfo.value.error_category
 
 
 class TestFloatKeywordValid:
     @pytest.fixture(scope="class")
-    def valid_sled_path(self, float_keyword_test_data_dir: Path) -> str:
+    def sled_path(self, float_keyword_test_data_dir: Path) -> str:
         return float_keyword_test_data_dir.joinpath("valid.sd")
 
     @pytest.fixture(scope="class")
-    def valid_sled_text(self, valid_sled_path: Path) -> str:
-        return valid_sled_path.read_text().strip()
+    def sled_text(self, sled_path: Path) -> str:
+        return sled_path.read_text().strip()
 
-    def test_valid(self, valid_sled_text: str) -> None:
-        d = pysled.from_sled(valid_sled_text)
+    def test_valid(self, sled_text: str) -> None:
+        d = pysled.from_sled(sled_text)
         check_float_keyword_valid(d)
         round_trip_sled_text = pysled.to_sled(d)
         round_trip_data = pysled.from_sled(round_trip_sled_text)
