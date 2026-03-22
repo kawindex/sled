@@ -1,0 +1,9 @@
+name: Python nightly
+on:
+  schedule:
+    - cron: "40 5 * * *" # daily at 0540 UTC
+
+jobs:
+  invoke-python-test:
+    name: Invoke Python test
+    uses: ./.github/workflows/python-test.yml
