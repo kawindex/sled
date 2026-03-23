@@ -47,10 +47,4 @@ jobs:
         run: uv sync
 
       - name: Run pytest
-        working-directory: ${{ github.workspace }}/python
-        run: >
-          uv run pytest
-          --cov=pysled
-          --cov-report=term-missing
-          --cov-report=markdown-append:$GITHUB_STEP_SUMMARY
-          tests/
+        run: 'bash "${{ github.workspace }}/python/scripts/run_test.sh"'
