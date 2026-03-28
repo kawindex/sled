@@ -1,5 +1,4 @@
 name: Python PR
-run-name: Python PR for ${{ github.ref_name }}
 on:
   pull_request:
     paths:
