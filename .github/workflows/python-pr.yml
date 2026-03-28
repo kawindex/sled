@@ -5,6 +5,7 @@ on:
     paths:
       - python/**
       - testdata/**
+      - .github/**
 
 jobs:
   invoke-python-test:
