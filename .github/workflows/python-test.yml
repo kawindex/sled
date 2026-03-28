@@ -47,7 +47,7 @@ jobs:
         run: uv sync
 
       - name: Run pytest py39-314
-        if: '${{ ! startsWith( matrix.python-version, "3.8" ) }}'
+        if: '${{ ! startsWith( matrix.python-version, ''3.8'' ) }}'
         working-directory: ${{ github.workspace }}/python
         run: >
           uv run pytest
@@ -57,5 +57,5 @@ jobs:
             tests/
 
       - name: Run pytest py38
-        if: '${{ startsWith( matrix.python-version, "3.8" ) }}'
+        if: '${{ startsWith( matrix.python-version, ''3.8'' ) }}'
         run: 'bash "${{ github.workspace }}/python/scripts/run_test_py38.sh"'
