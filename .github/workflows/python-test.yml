@@ -46,5 +46,16 @@ jobs:
         working-directory: ${{ github.workspace }}/python
         run: uv sync
 
-      - name: Run pytest
-        run: 'bash "${{ github.workspace }}/python/scripts/run_test.sh"'
+      - name: Run pytest py39-314
+        if: '${{ ! startsWith( matrix.python-version, "3.8" ) }}'
+        working-directory: ${{ github.workspace }}/python
+        run: >
+          uv run pytest
+            --cov=pysled
+            --cov-report=term-missing
+            --cov-report=markdown-append:$GITHUB_STEP_SUMMARY
+            tests/
+
+      - name: Run pytest py38
+        if: '${{ startsWith( matrix.python-version, "3.8" ) }}'
+        run: 'bash "${{ github.workspace }}/python/scripts/run_test_py38.sh"'
