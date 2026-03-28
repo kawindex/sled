@@ -51,10 +51,10 @@ jobs:
         working-directory: ${{ github.workspace }}/python
         run: >
           uv run pytest
-            --cov=pysled
-            --cov-report=term-missing
-            --cov-report=markdown-append:$GITHUB_STEP_SUMMARY
-            tests/
+          --cov=pysled
+          --cov-report=term-missing
+          --cov-report=markdown-append:$GITHUB_STEP_SUMMARY
+          tests/
 
       - name: Run pytest py38
         if: '${{ startsWith( matrix.python-version, ''3.8'' ) }}'
