@@ -1,4 +1,4 @@
-name: Python PR
+name: Python PR check
 on:
   pull_request:
     paths:
