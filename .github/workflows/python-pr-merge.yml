@@ -1,0 +1,17 @@
+name: Python merge
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+    paths:
+      - python/**
+      - testdata/**
+      - .github/**
+
+jobs:
+  invoke-python-test:
+    name: Invoke Python test
+    if: ${{ github.event.pull_request.merged }}
+    uses: ./.github/workflows/python-test.yml
