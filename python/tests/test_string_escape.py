@@ -263,6 +263,14 @@ class TestStringEscapeValue:
         round_trip_dict = pysled.from_sled(sled_text)
         assert quote_expected_dict == round_trip_dict
 
+    def test_quote_round_trip_basic(
+        self, quote_expected_dict: Dict[str, str]
+    ) -> None:
+        serializer = pysled._serializer_basic.SledSerializerBasic()
+        sled_text = serializer.to_sled(quote_expected_dict)
+        round_trip_dict = pysled.from_sled(sled_text)
+        assert quote_expected_dict == round_trip_dict
+
 
 class TestStringEscapeKey:
     @pytest.fixture(scope="class")
@@ -361,5 +369,13 @@ class TestStringEscapeKey:
         self, quote_expected_dict: Dict[str, str]
     ) -> None:
         sled_text = pysled.to_sled_mini(quote_expected_dict)
+        round_trip_dict = pysled.from_sled(sled_text)
+        assert quote_expected_dict == round_trip_dict
+
+    def test_quote_round_trip_basic(
+        self, quote_expected_dict: Dict[str, str]
+    ) -> None:
+        serializer = pysled._serializer_basic.SledSerializerBasic()
+        sled_text = serializer.to_sled(quote_expected_dict)
         round_trip_dict = pysled.from_sled(sled_text)
         assert quote_expected_dict == round_trip_dict

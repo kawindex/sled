@@ -78,6 +78,14 @@ class TestIntegerRangeKey:
         round_trip_data = pysled.from_sled(sled_text)
         assert control_expected_dict == round_trip_data
 
+    def test_control_round_trip_basic(
+        self, control_expected_dict: Dict[str, Dict[int, str]]
+    ) -> None:
+        serializer = pysled._serializer_basic.SledSerializerBasic()
+        sled_text = serializer.to_sled(control_expected_dict)
+        round_trip_data = pysled.from_sled(sled_text)
+        assert control_expected_dict == round_trip_data
+
 
 class TestIntegerRangeValue:
     @pytest.fixture(scope="class")

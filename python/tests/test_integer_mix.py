@@ -69,3 +69,15 @@ class TestIntegerMix:
         round_trip_list = round_trip_dict[arbitrary_key]
         for actual in round_trip_list:
             assert isinstance(actual, int)
+
+    def test_round_trip_basic(
+        self, expected_dict: Dict[str, List[int]], arbitrary_key: str
+    ) -> None:
+        serializer = pysled._serializer_basic.SledSerializerBasic()
+        sled_text = serializer.to_sled(expected_dict)
+        round_trip_dict = pysled.from_sled(sled_text)
+
+        assert expected_dict == round_trip_dict
+        round_trip_list = round_trip_dict[arbitrary_key]
+        for actual in round_trip_list:
+            assert isinstance(actual, int)

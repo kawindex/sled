@@ -55,3 +55,9 @@ class TestHexBasic:
         sled_text = pysled.to_sled_mini(expected_data)
         round_trip_data = pysled.from_sled(sled_text)
         assert expected_data == round_trip_data
+
+    def test_round_trip_basic(self, expected_data: Dict[str, bytes]) -> None:
+        serializer = pysled._serializer_basic.SledSerializerBasic()
+        sled_text = serializer.to_sled(expected_data)
+        round_trip_data = pysled.from_sled(sled_text)
+        assert expected_data == round_trip_data
