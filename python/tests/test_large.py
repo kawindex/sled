@@ -70,3 +70,9 @@ class TestLarge:
         sled_text = pysled.to_sled_mini(json_data)
         round_trip_data = pysled.from_sled(sled_text)
         assert json_data == round_trip_data
+
+    def test_round_trip_basic(self, json_data: dict) -> None:
+        serializer = pysled._serializer_basic.SledSerializerBasic()
+        sled_text = serializer.to_sled(json_data)
+        round_trip_data = pysled.from_sled(sled_text)
+        assert json_data == round_trip_data

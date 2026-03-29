@@ -49,6 +49,12 @@ class TestFloatNormal:
         approx_list = [pytest.approx(expected) for expected in float_values]
         return {arbitrary_key: approx_list}
 
+    @pytest.fixture(scope="class")
+    def input_dict(
+        self, float_values: List[float], arbitrary_key: str
+    ) -> Dict[str, List[float]]:
+        return {arbitrary_key: float_values}
+
     def test_parser(
         self,
         sled_text: str,
@@ -63,11 +69,10 @@ class TestFloatNormal:
 
     def test_round_trip(
         self,
-        float_values: List[float],
+        input_dict: Dict[str, List[float]],
         expected_dict: Dict[str, List[float]],
         arbitrary_key: str,
     ) -> None:
-        input_dict = {arbitrary_key: float_values}
         sled_text = pysled.to_sled(input_dict)
         round_trip_dict = pysled.from_sled(sled_text)
         assert expected_dict == round_trip_dict
@@ -77,12 +82,25 @@ class TestFloatNormal:
 
     def test_round_trip_mini(
         self,
-        float_values: List[float],
+        input_dict: Dict[str, List[float]],
         expected_dict: Dict[str, List[float]],
         arbitrary_key: str,
     ) -> None:
-        input_dict = {arbitrary_key: float_values}
         sled_text = pysled.to_sled_mini(input_dict)
+        round_trip_dict = pysled.from_sled(sled_text)
+        assert expected_dict == round_trip_dict
+        round_trip_list = round_trip_dict[arbitrary_key]
+        for actual in round_trip_list:
+            assert isinstance(actual, float)
+
+    def test_round_trip_basic(
+        self,
+        input_dict: Dict[str, List[float]],
+        expected_dict: Dict[str, List[float]],
+        arbitrary_key: str,
+    ) -> None:
+        serializer = pysled._serializer_basic.SledSerializerBasic()
+        sled_text = serializer.to_sled(input_dict)
         round_trip_dict = pysled.from_sled(sled_text)
         assert expected_dict == round_trip_dict
         round_trip_list = round_trip_dict[arbitrary_key]
