@@ -1,7 +1,7 @@
 import math
 import sys
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict
 
 import pytest
 
@@ -66,13 +66,21 @@ class TestLargeFloat:
         return sled_path.read_text().strip()
 
     @pytest.fixture(scope="class")
-    def expected_data(self) -> Dict[
-        str, Dict[str, Dict[str, Dict[str, float]]]
-    ]:
+    def data_value_positive(self) -> float:
+        return 1.797693e308
+
+    @pytest.fixture(scope="class")
+    def data_value_negative(self) -> float:
+        return -1.797693e308
+
+    @pytest.fixture(scope="class")
+    def expected_parse_data(
+        self, data_value_positive: float, data_value_negative: float
+    ) -> Dict[str, Any]:
         by_sign = {
-            "implicit-positive": pytest.approx(1.797693e308),
-            "explicit-positive": pytest.approx(1.797693e308),
-            "negative": pytest.approx(-1.797693e308),
+            "implicit-positive": pytest.approx(data_value_positive),
+            "explicit-positive": pytest.approx(data_value_positive),
+            "negative": pytest.approx(data_value_negative),
         }
         by_exp_sign = {
             "implicit-exp-sign": by_sign,
@@ -91,16 +99,59 @@ class TestLargeFloat:
     def test_parse(
         self,
         sled_text: str,
-        expected_data: Dict[str, Dict[str, Dict[str, Dict[str, float]]]],
+        expected_parse_data: Dict[str, Any],
     ) -> None:
         actual_data = pysled.from_sled(sled_text)
-        assert expected_data == actual_data
+        assert expected_parse_data == actual_data
         for by_exp_case in actual_data.values():
             for by_exp_sign in by_exp_case.values():
                 for by_sign in by_exp_sign.values():
                     for actual in by_sign.values():
                         assert isinstance(actual, float)
                         assert math.isfinite(actual)
+
+    @pytest.fixture(scope="class")
+    def round_trip_input_data(
+        self, data_value_positive: float, data_value_negative: float
+    ) -> Dict[str, float]:
+        return {
+            "p": data_value_positive,
+            "n": data_value_negative,
+        }
+
+    @pytest.fixture(scope="class")
+    def round_trip_expected_data(
+        self, round_trip_input_data: Dict[str, float]
+    ) -> Dict[str, Any]:
+        return {k: pytest.approx(v) for k, v in round_trip_input_data.items()}
+
+    def test_round_trip(
+        self,
+        round_trip_input_data: Dict[str, float],
+        round_trip_expected_data: Dict[str, Any],
+    ) -> None:
+        sled_text = pysled.to_sled(round_trip_input_data)
+        round_trip_data = pysled.from_sled(sled_text)
+        assert round_trip_expected_data == round_trip_data
+
+    def test_round_trip_mini(
+        self,
+        round_trip_input_data: Dict[str, float],
+        round_trip_expected_data: Dict[str, Any],
+    ) -> None:
+        sled_text = pysled.to_sled_mini(round_trip_input_data)
+        round_trip_data = pysled.from_sled(sled_text)
+        assert round_trip_expected_data == round_trip_data
+
+    def test_round_trip_serializer(
+        self,
+        each_sled_serializer,
+        round_trip_input_data: Dict[str, float],
+        round_trip_expected_data: Dict[str, Any],
+    ) -> None:
+        sled_text = each_sled_serializer.to_sled(round_trip_input_data)
+        round_trip_data = pysled.from_sled(sled_text)
+        assert round_trip_expected_data == round_trip_data
 
 
 class TestSmallFloat:
@@ -111,24 +162,79 @@ class TestSmallFloat:
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
         return sled_path.read_text().strip()
-    
+
     @pytest.fixture(scope="class")
-    def expected_data(self) -> Dict[
-        str, Dict[str, Dict[str, Dict[str, float]]]
-    ]:
-        positive_values = {
-            "near-zero": pytest.approx(4.95e-324, abs=sys.float_info.min),
-            "subnormal": pytest.approx(2.225e-308, rel=1e-3, abs=0),
-            "normal": pytest.approx(2.226e-308, rel=1e-3, abs=0),
+    def data_value_positive_near_zero(self) -> float:
+        return 4.95e-324
+
+    @pytest.fixture(scope="class")
+    def data_value_positive_subnormal(self) -> float:
+        return 2.225e-308
+
+    @pytest.fixture(scope="class")
+    def data_value_positive_normal(self) -> float:
+        return 2.226e-308
+
+    @pytest.fixture(scope="class")
+    def data_value_negative_near_zero(self) -> float:
+        return -4.95e-324
+
+    @pytest.fixture(scope="class")
+    def data_value_negative_subnormal(self) -> float:
+        return -2.225e-308
+
+    @pytest.fixture(scope="class")
+    def data_value_negative_normal(self) -> float:
+        return -2.226e-308
+
+    @pytest.fixture(scope="class")
+    def data_values_positive(
+        self,
+        data_value_positive_near_zero: float,
+        data_value_positive_subnormal: float,
+        data_value_positive_normal: float,
+    ) -> Dict[str, Any]:
+        return {
+            "near-zero": pytest.approx(
+                data_value_positive_near_zero, abs=sys.float_info.min
+            ),
+            "subnormal": pytest.approx(
+                data_value_positive_subnormal, rel=1e-3, abs=0
+            ),
+            "normal": pytest.approx(
+                data_value_positive_normal, rel=1e-3, abs=0
+            ),
         }
+
+    @pytest.fixture(scope="class")
+    def data_values_negative(
+        self,
+        data_value_negative_near_zero: float,
+        data_value_negative_subnormal: float,
+        data_value_negative_normal: float,
+    ) -> Dict[str, Any]:
+        return {
+            "near-zero": pytest.approx(
+                data_value_negative_near_zero, abs=sys.float_info.min
+            ),
+            "subnormal": pytest.approx(
+                data_value_negative_subnormal, rel=1e-3, abs=0
+            ),
+            "normal": pytest.approx(
+                data_value_negative_normal, rel=1e-3, abs=0
+            ),
+        }
+
+    @pytest.fixture(scope="class")
+    def expected_parse_data(
+        self,
+        data_values_positive: Dict[str, Any],
+        data_values_negative: Dict[str, Any],
+    ) -> Dict[str, Dict[str, Any]]:
         by_sign = {
-            "implicit-positive": positive_values,
-            "explicit-positive": positive_values,
-            "negative": {
-                "near-zero": pytest.approx(-4.95e-324, abs=sys.float_info.min),
-                "subnormal": pytest.approx(-2.225e-308, rel=1e-3, abs=0),
-                "normal": pytest.approx(-2.226e-308, rel=1e-3, abs=0),
-            }
+            "implicit-positive": data_values_positive,
+            "explicit-positive": data_values_positive,
+            "negative": data_values_negative,
         }
         by_exp_case = {
             "lower-case-exp": by_sign,
@@ -139,17 +245,79 @@ class TestSmallFloat:
             "comma": by_exp_case,
         }
         return by_decimal_mark
-    
+
     def test_parse(
         self,
         sled_text: str,
-        expected_data: Dict[str, Dict[str, Dict[str, Dict[str, float]]]],
+        expected_parse_data: Dict[str, Any],
     ) -> None:
         actual_data = pysled.from_sled(sled_text)
-        assert expected_data == actual_data
+        assert expected_parse_data == actual_data
         for by_exp_case in actual_data.values():
             for by_sign in by_exp_case.values():
                 for values in by_sign.values():
                     for actual in values.values():
                         assert isinstance(actual, float)
                         assert math.isfinite(actual)
+
+    @pytest.fixture(scope="class")
+    def round_trip_input_data(
+        self,
+        data_value_positive_near_zero: float,
+        data_value_positive_subnormal: float,
+        data_value_positive_normal: float,
+        data_value_negative_near_zero: float,
+        data_value_negative_subnormal: float,
+        data_value_negative_normal: float,
+    ) -> Dict[str, Dict[str, float]]:
+        return {
+            "p": {
+                "near-zero": data_value_positive_near_zero,
+                "subnormal": data_value_positive_subnormal,
+                "normal": data_value_positive_normal,
+            },
+            "n": {
+                "near-zero": data_value_negative_near_zero,
+                "subnormal": data_value_negative_subnormal,
+                "normal": data_value_negative_normal,
+            }
+        }
+
+    @pytest.fixture(scope="class")
+    def round_trip_expected_data(
+        self,
+        data_values_positive: Dict[str, Any],
+        data_values_negative: Dict[str, Any],
+    ) -> Dict[str, Dict[str, Any]]:
+        return {
+            "p": data_values_positive,
+            "n": data_values_negative,
+        }
+
+    def test_round_trip(
+        self,
+        round_trip_input_data: Dict[str, Dict[str, float]],
+        round_trip_expected_data: Dict[str, Dict[str, Any]],
+    ) -> None:
+        sled_text = pysled.to_sled(round_trip_input_data)
+        round_trip_data = pysled.from_sled(sled_text)
+        assert round_trip_expected_data == round_trip_data
+
+    def test_round_trip_mini(
+        self,
+        round_trip_input_data: Dict[str, Dict[str, float]],
+        round_trip_expected_data: Dict[str, Dict[str, Any]],
+    ) -> None:
+        sled_text = pysled.to_sled_mini(round_trip_input_data)
+        round_trip_data = pysled.from_sled(sled_text)
+        assert round_trip_expected_data == round_trip_data
+
+    def test_round_trip_serializer(
+        self,
+        each_sled_serializer,
+        round_trip_input_data: Dict[str, Dict[str, float]],
+        round_trip_expected_data: Dict[str, Dict[str, Any]],
+    ) -> None:
+        sled_text = each_sled_serializer.to_sled(round_trip_input_data)
+        round_trip_data = pysled.from_sled(sled_text)
+        assert round_trip_expected_data == round_trip_data
