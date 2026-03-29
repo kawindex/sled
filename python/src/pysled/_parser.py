@@ -794,26 +794,36 @@ class Parser:
 
     def _parse_concat_content(self) -> str:
         self._consume_optional_ws_or_delimiters()
-        if self._peek() == CONCAT_CLOSE_MARK:
+
+        c = self._peek()
+        if c == CONCAT_CLOSE_MARK:
             return ""
 
         content: List[str] = []
         while True:
-            if self._peek() not in QUOTE_MARK_SET:
-                if self._is_at_end():
-                    raise self._make_invalid_sled_error(
-                        f"Reached end of input without finding '{CONCAT_CLOSE_MARK}' "
-                        "to close concat."
-                    )
+            if c in QUOTE_MARK_SET:
+                quote, _ = self._parse_quote()
+                content.append(quote)
+            elif c not in IDENTITY_DISALLOWED_START_SYMBOLS:
+                identity, _ = self._parse_identity()
+                content.append(identity)
+            elif self._is_at_end():
                 raise self._make_invalid_sled_error(
-                    "Expected either a quote mark (single or double) "
-                    f"to start a quote, or '{CONCAT_CLOSE_MARK}' "
-                    f"to close the concat, but got {repr(self._peek())}."
+                    f"Reached end of input without finding '{CONCAT_CLOSE_MARK}' "
+                    "to close concat."
                 )
-            quote, _ = self._parse_quote()
-            content.append(quote)
+            else:
+                raise self._make_invalid_sled_error(
+                    "Expected either a valid start of an identity, "
+                    "a quote mark (single or double) to start a quote, "
+                    f"or '{CONCAT_CLOSE_MARK}' to close the concat, "
+                    f"but got {repr(c)}."
+                )
+
             ws = self._consume_optional_ws_or_delimiters()
-            if self._peek() == CONCAT_CLOSE_MARK:
+
+            c = self._peek()
+            if c == CONCAT_CLOSE_MARK:
                 return "".join(content)
             elif DELIMITER_SET.isdisjoint(ws):
                 if self._is_at_end():
@@ -825,7 +835,7 @@ class Parser:
                     f"Expected either '{CONCAT_CLOSE_MARK}' to close "
                     f"the concat, or a delimiter ('{DELIMITER_MARK}' "
                     f"or a line separator) before the next segment, "
-                    f"but got {repr(self._peek())}."
+                    f"but got {repr(c)}."
                 )
 
     # Number types
