@@ -359,21 +359,17 @@ class SledSerializer(SledSerializerBasic):
             # and omit horizontal separator between groups on separate lines
             separator_length = len(self._hex_horizontal_separator)
             remainder_length = (self._hex_line_length + separator_length) % (
-                HEX_DIGITS_PER_BYTE * hex_bytes_per_separator
-                + separator_length
+                separator_length - HEX_DIGITS_PER_BYTE * hex_bytes_per_separator
             )
             line_length = self._hex_line_length - remainder_length
             line_length_in_content = line_length + separator_length
 
-        hex_content_len = len(hex_content)
-        line_start_index = 0
-        lines: List[str] = []
-        while line_start_index < hex_content_len:
-            lines.append(
-                hex_content[line_start_index:line_start_index+line_length]
+        return [
+            hex_content[line_start_index:line_start_index+line_length]
+            for line_start_index in range(
+                0, len(hex_content), line_length_in_content
             )
-            line_start_index += line_length_in_content
-        return lines
+        ]
 
     def to_integer(self, n: int) -> str:
         self.validate_integer(n)
