@@ -1,0 +1,63 @@
+my_concat = @concat(
+  "Constituent quotes are concatenated as-is, without any delimiter, "
+  "so include spaces and line separators as desired."
+  "\n\n"
+  "Here's a new paragraph. " # You can even have comments!
+  # Another comment
+
+  'Each segment is just a normal quote or ' ; identity, ; ' '
+  "so you can of course have multiple\nline\nseparators,\nwherever.\n\n"
+  ""
+  "Like in maps and lists, " ; "adjacent segments " ; "are separated by" ;
+  " at least one semicolon or line separator.\n"
+
+  "You can have stray delimiters or line separators "
+
+  anywhere
+
+  "\n"
+  this_also_works_just_fine_
+  subject_to_the_usual_restrictions
+  '\n'
+  You_still_have_to_quote
+  ' '
+  spaces
+  ' '
+  if
+  ' '
+  you
+  " "
+  want
+  " "
+  to
+  " use "
+  them.
+)
+
+@concat(
+  'These work just fine '
+  "as keys.\n"
+  'They are '; equivalent;" to any other string representation "
+  'of their concatenated '
+  form
+) = my_entity_value
+
+@concat(squeeze;squish) = @concat( mini )
+
+@concat("this is empty") = @concat()
+
+same = @concat(
+  # Just a comment here!
+)
+again = @concat(# immediate comment
+)
+
+@concat("Lorem ipsum") = @concat(
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+  "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+  "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
+  "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in "
+  "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
+  "Excepteur sint occaecat cupidatat non proident, "
+  "sunt in culpa qui officia deserunt mollit anim id est laborum."
+)
