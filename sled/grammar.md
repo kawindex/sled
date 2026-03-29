@@ -1,4 +1,4 @@
-```
+```mckeeman
 sled
     optional_ws_or_delimiters smap_content
     optional_ws smap optional_ws
@@ -88,16 +88,16 @@ concrete
     "@nil"
 
 string
-    identity_string
-    quote_string
-    "@concat" optional_ws '(' optional_quote_strings ')'
+    primitive_string
+    "@concat" optional_ws '(' optional_primitive_strings ')'
 
-optional_quote_strings
+optional_primitive_strings
     ""
-    quote_string optional_ws
-    quote_string optional_ws delimiter optional_ws_or_delimiters optional_quote_strings
+    primitive_string optional_ws
+    primitive_string optional_ws delimiter optional_ws_or_delimiters optional_primitive_strings
 
-quote_string
+primitive_string
+    identity_string
     '"' optional_doubly_quoted_symbols '"'
     ''' optional_singly_quoted_symbols '''
 
