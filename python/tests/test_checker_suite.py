@@ -76,9 +76,10 @@ class TestCheckerSuiteP01:
         round_trip_dict = pysled.from_sled(sled_text)
         assert expected_dict == round_trip_dict
 
-    def test_round_trip_basic(self, expected_dict: Dict[str, list]) -> None:
-        serializer = pysled._serializer_basic.SledSerializerBasic()
-        sled_text = serializer.to_sled(expected_dict)
+    def test_round_trip_serializer(
+        self, each_sled_serializer, expected_dict: Dict[str, list]
+    ) -> None:
+        sled_text = each_sled_serializer.to_sled(expected_dict)
         round_trip_dict = pysled.from_sled(sled_text)
         assert expected_dict == round_trip_dict
 
@@ -254,11 +255,12 @@ class TestCheckerSuiteInvalid:
         round_trip_data = pysled.from_sled(sled_text)
         assert invalid_test_case.expected_data == round_trip_data
 
-    def test_control_round_trip_basic(
-        self, invalid_test_case: CheckerSuiteTestCase
+    def test_control_round_trip_serializer(
+        self, each_sled_serializer, invalid_test_case: CheckerSuiteTestCase
     ) -> None:
-        serializer = pysled._serializer_basic.SledSerializerBasic()
-        sled_text = serializer.to_sled(invalid_test_case.expected_data)
+        sled_text = each_sled_serializer.to_sled(
+            invalid_test_case.expected_data
+        )
         round_trip_data = pysled.from_sled(sled_text)
         assert invalid_test_case.expected_data == round_trip_data
 
@@ -366,10 +368,9 @@ class TestCheckerSuiteValid:
         round_trip_data = pysled.from_sled(sled_text)
         assert valid_test_case.expected_data == round_trip_data
 
-    def test_round_trip_basic(
-        self, valid_test_case: CheckerSuiteTestCase
+    def test_round_trip_serializer(
+        self, each_sled_serializer, valid_test_case: CheckerSuiteTestCase
     ) -> None:
-        serializer = pysled._serializer_basic.SledSerializerBasic()
-        sled_text = serializer.to_sled(valid_test_case.expected_data)
+        sled_text = each_sled_serializer.to_sled(valid_test_case.expected_data)
         round_trip_data = pysled.from_sled(sled_text)
         assert valid_test_case.expected_data == round_trip_data

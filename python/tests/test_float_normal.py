@@ -93,14 +93,14 @@ class TestFloatNormal:
         for actual in round_trip_list:
             assert isinstance(actual, float)
 
-    def test_round_trip_basic(
+    def test_round_trip_serializer(
         self,
+        each_sled_serializer,
         input_dict: Dict[str, List[float]],
         expected_dict: Dict[str, List[float]],
         arbitrary_key: str,
     ) -> None:
-        serializer = pysled._serializer_basic.SledSerializerBasic()
-        sled_text = serializer.to_sled(input_dict)
+        sled_text = each_sled_serializer.to_sled(input_dict)
         round_trip_dict = pysled.from_sled(sled_text)
         assert expected_dict == round_trip_dict
         round_trip_list = round_trip_dict[arbitrary_key]
