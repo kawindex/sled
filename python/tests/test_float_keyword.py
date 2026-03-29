@@ -55,10 +55,40 @@ class TestFloatKeywordValid:
     def sled_text(self, sled_path: Path) -> str:
         return sled_path.read_text().strip()
 
-    def test_valid(self, sled_text: str) -> None:
+    def test_parse_valid(self, sled_text: str) -> None:
         d = pysled.from_sled(sled_text)
         check_float_keyword_valid(d)
-        round_trip_sled_text = pysled.to_sled(d)
+
+    @pytest.fixture(scope="class")
+    def input_data(self) -> Dict[str, float]:
+        return {
+            "nan": math.nan,
+            "inf": math.inf,
+            "pi": 3.14159,
+            "ninf": -math.inf,
+            "@nan": math.nan,
+            "-pi": -3.14,
+            "@inf": math.inf,
+            "@ninf": -math.inf,
+            "x": math.inf,
+            "y": -math.inf,
+            "z": math.nan,
+        }
+
+    def test_round_trip(self, input_data: Dict[str, float]) -> None:
+        round_trip_sled_text = pysled.to_sled(input_data)
+        round_trip_data = pysled.from_sled(round_trip_sled_text)
+        check_float_keyword_valid(round_trip_data)
+
+    def test_round_trip_mini(self, input_data: Dict[str, float]) -> None:
+        round_trip_sled_text = pysled.to_sled_mini(input_data)
+        round_trip_data = pysled.from_sled(round_trip_sled_text)
+        check_float_keyword_valid(round_trip_data)
+
+    def test_round_trip_serializer(
+        self, each_sled_serializer, input_data: Dict[str, float]
+    ) -> None:
+        round_trip_sled_text = each_sled_serializer.to_sled(input_data)
         round_trip_data = pysled.from_sled(round_trip_sled_text)
         check_float_keyword_valid(round_trip_data)
 
