@@ -57,9 +57,8 @@ class TestHexInvalid:
         assert expected_data == round_trip_data
 
     def test_control_round_trip_basic(
-        self, expected_data: Dict[str, bytes]
+        self, each_sled_serializer, expected_data: Dict[str, bytes]
     ) -> None:
-        serializer = pysled._serializer_basic.SledSerializerBasic()
-        sled_text = serializer.to_sled(expected_data)
+        sled_text = each_sled_serializer.to_sled(expected_data)
         round_trip_data = pysled.from_sled(sled_text)
         assert expected_data == round_trip_data

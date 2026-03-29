@@ -263,11 +263,10 @@ class TestStringEscapeValue:
         round_trip_dict = pysled.from_sled(sled_text)
         assert quote_expected_dict == round_trip_dict
 
-    def test_quote_round_trip_basic(
-        self, quote_expected_dict: Dict[str, str]
+    def test_quote_round_trip_serializer(
+        self, each_sled_serializer, quote_expected_dict: Dict[str, str]
     ) -> None:
-        serializer = pysled._serializer_basic.SledSerializerBasic()
-        sled_text = serializer.to_sled(quote_expected_dict)
+        sled_text = each_sled_serializer.to_sled(quote_expected_dict)
         round_trip_dict = pysled.from_sled(sled_text)
         assert quote_expected_dict == round_trip_dict
 
@@ -372,10 +371,9 @@ class TestStringEscapeKey:
         round_trip_dict = pysled.from_sled(sled_text)
         assert quote_expected_dict == round_trip_dict
 
-    def test_quote_round_trip_basic(
-        self, quote_expected_dict: Dict[str, str]
+    def test_quote_round_trip_serializer(
+        self, each_sled_serializer, quote_expected_dict: Dict[str, str]
     ) -> None:
-        serializer = pysled._serializer_basic.SledSerializerBasic()
-        sled_text = serializer.to_sled(quote_expected_dict)
+        sled_text = each_sled_serializer.to_sled(quote_expected_dict)
         round_trip_dict = pysled.from_sled(sled_text)
         assert quote_expected_dict == round_trip_dict

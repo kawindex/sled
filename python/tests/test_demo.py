@@ -112,10 +112,9 @@ class TestDemo:
         round_trip_data = pysled.from_sled(sled_text)
         assert expected_data == round_trip_data
 
-    def test_round_trip_basic(
-        self, expected_data: Dict[str, pysled.Entity]
+    def test_round_trip_serializer(
+        self, each_sled_serializer, expected_data: Dict[str, pysled.Entity]
     ) -> None:
-        serializer = pysled._serializer_basic.SledSerializerBasic()
-        sled_text = serializer.to_sled(expected_data)
+        sled_text = each_sled_serializer.to_sled(expected_data)
         round_trip_data = pysled.from_sled(sled_text)
         assert expected_data == round_trip_data

@@ -78,11 +78,12 @@ class TestIntegerRangeKey:
         round_trip_data = pysled.from_sled(sled_text)
         assert control_expected_dict == round_trip_data
 
-    def test_control_round_trip_basic(
-        self, control_expected_dict: Dict[str, Dict[int, str]]
+    def test_control_round_trip_serializer(
+        self,
+        each_sled_serializer,
+        control_expected_dict: Dict[str, Dict[int, str]],
     ) -> None:
-        serializer = pysled._serializer_basic.SledSerializerBasic()
-        sled_text = serializer.to_sled(control_expected_dict)
+        sled_text = each_sled_serializer.to_sled(control_expected_dict)
         round_trip_data = pysled.from_sled(sled_text)
         assert control_expected_dict == round_trip_data
 
@@ -150,5 +151,12 @@ class TestIntegerRangeValue:
         self, control_expected_data: Dict[str, int]
     ) -> None:
         sled_text = pysled.to_sled_mini(control_expected_data)
+        round_trip_data = pysled.from_sled(sled_text)
+        assert control_expected_data == round_trip_data
+
+    def test_control_round_trip_serializer(
+        self, each_sled_serializer, control_expected_data: Dict[str, int]
+    ) -> None:
+        sled_text = each_sled_serializer.to_sled(control_expected_data)
         round_trip_data = pysled.from_sled(sled_text)
         assert control_expected_data == round_trip_data
