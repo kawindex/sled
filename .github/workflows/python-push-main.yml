@@ -1,0 +1,14 @@
+name: Python push main
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - python/**
+      - testdata/**
+      - .github/**
+
+jobs:
+  invoke-python-test:
+    name: Invoke Python test
+    uses: ./.github/workflows/python-test.yml
