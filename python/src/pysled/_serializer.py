@@ -328,10 +328,14 @@ class SledSerializer(SledSerializerBasic):
         )
 
     def _to_hex_content(self, b: bytes) -> str:
-        content = b.hex(
-            self._hex_horizontal_separator, self._hex_bytes_per_separator
+        content = (
+            b.hex()
+            if self._hex_horizontal_separator == ""
+            else b.hex(
+                self._hex_horizontal_separator, self._hex_bytes_per_separator
+            )
         )
-        return content.upper if self._hex_upper_case else content
+        return content.upper() if self._hex_upper_case else content
 
     def _fold_hex_lines(
         self, hex_content: str, hex_bytes_per_separator: int
