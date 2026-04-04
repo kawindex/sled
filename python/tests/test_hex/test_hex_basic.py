@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict, Mapping
 
 import pytest
 
@@ -51,6 +51,15 @@ class TestHexBasic:
         round_trip_data = pysled.from_sled(sled_text)
         assert expected_data == round_trip_data
 
+    def test_round_trip_with_hex_kwargs(
+        self,
+        expected_data: Dict[str, bytes],
+        sled_serializer_kwargs_hex: Mapping[str, Any],
+    ) -> None:
+        sled_text = pysled.to_sled(expected_data, **sled_serializer_kwargs_hex)
+        round_trip_data = pysled.from_sled(sled_text)
+        assert expected_data == round_trip_data
+
     def test_round_trip_mini(self, expected_data: Dict[str, bytes]) -> None:
         sled_text = pysled.to_sled_mini(expected_data)
         round_trip_data = pysled.from_sled(sled_text)
@@ -60,5 +69,15 @@ class TestHexBasic:
         self, each_sled_serializer, expected_data: Dict[str, bytes]
     ) -> None:
         sled_text = each_sled_serializer.to_sled(expected_data)
+        round_trip_data = pysled.from_sled(sled_text)
+        assert expected_data == round_trip_data
+
+    def test_round_trip_serializer_with_hex_kwargs(
+        self,
+        expected_data: Dict[str, bytes],
+        sled_serializer_kwargs_hex: Mapping[str, Any],
+    ) -> None:
+        serializer = pysled.SledSerializer(**sled_serializer_kwargs_hex)
+        sled_text = serializer.to_sled(expected_data)
         round_trip_data = pysled.from_sled(sled_text)
         assert expected_data == round_trip_data
