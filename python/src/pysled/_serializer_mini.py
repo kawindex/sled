@@ -186,6 +186,7 @@ class SledSerializerMini(SledSerializerBasic):
         """
 
         super().__init__(
+            indent=self.EMPTY_INDENT,
             use_top_level_braces=use_top_level_braces,
             # string
             always_quote=always_quote,
