@@ -289,14 +289,14 @@ class SledSerializer(SledSerializerBasic):
             if hex_horizontal_separator == ""
             else hex_bytes_per_separator
         )
-        if hex_line_length < (
+        if hex_line_length != 0 and hex_line_length < (
             abs(self._hex_bytes_per_separator) * HEX_DIGITS_PER_BYTE
         ):
             raise ValueError(
                 f"hex_line_length must be at least {HEX_DIGITS_PER_BYTE}x "
                 "the absolute value of hex_bytes_per_separator, "
                 f"but it is only {hex_line_length}, which is less than "
-                f"{abs(self._hex_horizontal_separator) * HEX_DIGITS_PER_BYTE}"
+                f"{abs(self._hex_bytes_per_separator) * HEX_DIGITS_PER_BYTE}"
             )
         self._hex_line_length = hex_line_length
 
