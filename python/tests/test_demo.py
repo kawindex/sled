@@ -3,12 +3,12 @@ from typing import Dict, NamedTuple
 
 import pytest
 
-import pysled
+import parsled
 
 
 class DemoTestCase(NamedTuple):
     file_name: str
-    expected_data: Dict[str, pysled.Entity]
+    expected_data: Dict[str, parsled.Entity]
 
 
 class TestDemo:
@@ -89,32 +89,32 @@ class TestDemo:
     @pytest.fixture(scope="class")
     def expected_data(
         self, demo_test_case: DemoTestCase
-    ) -> Dict[str, pysled.Entity]:
+    ) -> Dict[str, parsled.Entity]:
         return demo_test_case.expected_data
 
     def test_parse(
-        self, sled_text: str, expected_data: Dict[str, pysled.Entity]
+        self, sled_text: str, expected_data: Dict[str, parsled.Entity]
     ) -> None:
-        actual_data = pysled.from_sled(sled_text)
+        actual_data = parsled.from_sled(sled_text)
         assert expected_data == actual_data
 
     def test_round_trip(
-        self, expected_data: Dict[str, pysled.Entity]
+        self, expected_data: Dict[str, parsled.Entity]
     ) -> None:
-        sled_text = pysled.to_sled(expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(expected_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data
 
     def test_round_trip_mini(
-        self, expected_data: Dict[str, pysled.Entity]
+        self, expected_data: Dict[str, parsled.Entity]
     ) -> None:
-        sled_text = pysled.to_sled_mini(expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(expected_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data
 
     def test_round_trip_serializer(
-        self, each_sled_serializer, expected_data: Dict[str, pysled.Entity]
+        self, each_sled_serializer, expected_data: Dict[str, parsled.Entity]
     ) -> None:
         sled_text = each_sled_serializer.to_sled(expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data

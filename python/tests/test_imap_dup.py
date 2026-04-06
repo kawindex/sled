@@ -3,12 +3,12 @@ from typing import Dict, NamedTuple
 
 import pytest
 
-import pysled
+import parsled
 
 
 class ImapDupTestCase(NamedTuple):
     file_name: str
-    control_expected_imap: Dict[int, pysled.Entity]
+    control_expected_imap: Dict[int, parsled.Entity]
 
 
 class TestImapDup:
@@ -116,9 +116,9 @@ class TestImapDup:
         return invalid_sled_path.read_text().strip()
 
     def test_parse_invalid(self, invalid_sled_text: str) -> None:
-        with pytest.raises(pysled.SledError) as excinfo:
-            pysled.from_sled(invalid_sled_text)
-        assert pysled.SledErrorCategory.DUPLICATE_MAP_KEY == excinfo.value.error_category
+        with pytest.raises(parsled.SledError) as excinfo:
+            parsled.from_sled(invalid_sled_text)
+        assert parsled.SledErrorCategory.DUPLICATE_MAP_KEY == excinfo.value.error_category
 
     @pytest.fixture(scope="class")
     def control_sled_path(
@@ -133,16 +133,16 @@ class TestImapDup:
     @pytest.fixture(scope="class")
     def control_expected_dict(
         self, dup_test_case: ImapDupTestCase, top_level_key: str
-    ) -> Dict[str, pysled.Entity]:
+    ) -> Dict[str, parsled.Entity]:
         return {top_level_key: dup_test_case.control_expected_imap}
 
     def test_parse_control(
         self,
         top_level_key: str,
         control_sled_text: str,
-        control_expected_dict: Dict[str, pysled.Entity],
+        control_expected_dict: Dict[str, parsled.Entity],
     ) -> None:
-        actual_data = pysled.from_sled(control_sled_text)
+        actual_data = parsled.from_sled(control_sled_text)
         assert control_expected_dict == actual_data
         actual_imap = actual_data[top_level_key]
         for key in actual_imap:
@@ -151,10 +151,10 @@ class TestImapDup:
     def test_control_round_trip(
         self,
         top_level_key: str,
-        control_expected_dict: Dict[str, pysled.Entity],
+        control_expected_dict: Dict[str, parsled.Entity],
     ) -> None:
-        sled_text = pysled.to_sled(control_expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(control_expected_dict)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert control_expected_dict == round_trip_dict
         round_trip_imap = round_trip_dict[top_level_key]
         for key in round_trip_imap:
@@ -163,10 +163,10 @@ class TestImapDup:
     def test_control_round_trip_mini(
         self,
         top_level_key: str,
-        control_expected_dict: Dict[str, pysled.Entity],
+        control_expected_dict: Dict[str, parsled.Entity],
     ) -> None:
-        sled_text = pysled.to_sled_mini(control_expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(control_expected_dict)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert control_expected_dict == round_trip_dict
         round_trip_imap = round_trip_dict[top_level_key]
         for key in round_trip_imap:
@@ -176,10 +176,10 @@ class TestImapDup:
         self,
         each_sled_serializer,
         top_level_key: str,
-        control_expected_dict: Dict[str, pysled.Entity],
+        control_expected_dict: Dict[str, parsled.Entity],
     ) -> None:
         sled_text = each_sled_serializer.to_sled(control_expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert control_expected_dict == round_trip_dict
         round_trip_imap = round_trip_dict[top_level_key]
         for key in round_trip_imap:

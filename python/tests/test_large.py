@@ -10,7 +10,7 @@ from typing import Dict
 
 import pytest
 
-import pysled
+import parsled
 
 
 class TestLarge:
@@ -58,22 +58,22 @@ class TestLarge:
         return test_data_file_path.read_text(encoding="utf-8")
 
     def test_parse(self, sled_text: str, json_data: dict) -> None:
-        actual_data = pysled.from_sled(sled_text)
+        actual_data = parsled.from_sled(sled_text)
         assert json_data == actual_data
 
     def test_round_trip(self, json_data: dict) -> None:
-        sled_text = pysled.to_sled(json_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(json_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert json_data == round_trip_data
 
     def test_round_trip_mini(self, json_data: dict) -> None:
-        sled_text = pysled.to_sled_mini(json_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(json_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert json_data == round_trip_data
 
     def test_round_trip_serializer(
         self, each_sled_serializer, json_data: dict
     ) -> None:
         sled_text = each_sled_serializer.to_sled(json_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        round_trip_data = parsled.from_sled(sled_text)
         assert json_data == round_trip_data

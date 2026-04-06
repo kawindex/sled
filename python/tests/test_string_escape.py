@@ -3,7 +3,7 @@ from typing import Dict, NamedTuple
 
 import pytest
 
-import pysled
+import parsled
 
 
 class StringEscapeTestCase(NamedTuple):
@@ -199,9 +199,9 @@ class TestStringEscapeValue:
         return identity_sled_path.read_text()
 
     def test_identity_parse(self, identity_sled_text: str) -> None:
-        with pytest.raises(pysled.SledError) as excinfo:
-            pysled.from_sled(identity_sled_text)
-        assert pysled.SledErrorCategory.SYNTAX == excinfo.value.error_category
+        with pytest.raises(parsled.SledError) as excinfo:
+            parsled.from_sled(identity_sled_text)
+        assert parsled.SledErrorCategory.SYNTAX == excinfo.value.error_category
 
     @pytest.fixture(scope="class", params=("", "concat-"))
     def quote_sub_dir_prefix(self, request: pytest.FixtureRequest) -> str:
@@ -246,28 +246,28 @@ class TestStringEscapeValue:
     def test_quote_parse(
         self, quote_sled_text: str, quote_expected_dict: Dict[str, str]
     ) -> None:
-        actual_dict = pysled.from_sled(quote_sled_text)
+        actual_dict = parsled.from_sled(quote_sled_text)
         assert quote_expected_dict == actual_dict
 
     def test_quote_round_trip(
         self, quote_expected_dict: Dict[str, str]
     ) -> None:
-        sled_text = pysled.to_sled(quote_expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(quote_expected_dict)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert quote_expected_dict == round_trip_dict
 
     def test_quote_round_trip_mini(
         self, quote_expected_dict: Dict[str, str]
     ) -> None:
-        sled_text = pysled.to_sled_mini(quote_expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(quote_expected_dict)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert quote_expected_dict == round_trip_dict
 
     def test_quote_round_trip_serializer(
         self, each_sled_serializer, quote_expected_dict: Dict[str, str]
     ) -> None:
         sled_text = each_sled_serializer.to_sled(quote_expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert quote_expected_dict == round_trip_dict
 
 
@@ -307,9 +307,9 @@ class TestStringEscapeKey:
         return identity_sled_path.read_text()
 
     def test_identity_parse(self, identity_sled_text: str) -> None:
-        with pytest.raises(pysled.SledError) as excinfo:
-            pysled.from_sled(identity_sled_text)
-        assert pysled.SledErrorCategory.SYNTAX == excinfo.value.error_category
+        with pytest.raises(parsled.SledError) as excinfo:
+            parsled.from_sled(identity_sled_text)
+        assert parsled.SledErrorCategory.SYNTAX == excinfo.value.error_category
 
     @pytest.fixture(scope="class", params=("", "concat-"))
     def quote_sub_dir_prefix(self, request: pytest.FixtureRequest) -> str:
@@ -354,26 +354,26 @@ class TestStringEscapeKey:
     def test_quote_parse(
         self, quote_sled_text: str, quote_expected_dict: Dict[str, str]
     ) -> None:
-        actual_dict = pysled.from_sled(quote_sled_text)
+        actual_dict = parsled.from_sled(quote_sled_text)
         assert quote_expected_dict == actual_dict
 
     def test_quote_round_trip(
         self, quote_expected_dict: Dict[str, str]
     ) -> None:
-        sled_text = pysled.to_sled(quote_expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(quote_expected_dict)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert quote_expected_dict == round_trip_dict
 
     def test_quote_round_trip_mini(
         self, quote_expected_dict: Dict[str, str]
     ) -> None:
-        sled_text = pysled.to_sled_mini(quote_expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(quote_expected_dict)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert quote_expected_dict == round_trip_dict
 
     def test_quote_round_trip_serializer(
         self, each_sled_serializer, quote_expected_dict: Dict[str, str]
     ) -> None:
         sled_text = each_sled_serializer.to_sled(quote_expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert quote_expected_dict == round_trip_dict

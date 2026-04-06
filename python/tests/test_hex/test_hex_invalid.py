@@ -3,7 +3,7 @@ from typing import Dict
 
 import pytest
 
-import pysled
+import parsled
 
 
 class TestHexInvalid:
@@ -32,33 +32,33 @@ class TestHexInvalid:
         return {"data": bytes((193, 165, 81, 192))}
 
     def test_parse_partial_byte(self, partial_byte_sled_text: str) -> None:
-        with pytest.raises(pysled.SledError) as excinfo:
-            pysled.from_sled(partial_byte_sled_text)
-        assert pysled.SledErrorCategory.SYNTAX == excinfo.value.error_category
+        with pytest.raises(parsled.SledError) as excinfo:
+            parsled.from_sled(partial_byte_sled_text)
+        assert parsled.SledErrorCategory.SYNTAX == excinfo.value.error_category
 
     def test_parse_control(
         self, control_sled_text: str, expected_data: Dict[str, bytes]
     ) -> None:
-        actual_data = pysled.from_sled(control_sled_text)
+        actual_data = parsled.from_sled(control_sled_text)
         assert expected_data == actual_data
 
     def test_control_round_trip(
         self, expected_data: Dict[str, bytes]
     ) -> None:
-        sled_text = pysled.to_sled(expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(expected_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data
 
     def test_control_round_trip_mini(
         self, expected_data: Dict[str, bytes]
     ) -> None:
-        sled_text = pysled.to_sled_mini(expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(expected_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data
 
     def test_control_round_trip_basic(
         self, each_sled_serializer, expected_data: Dict[str, bytes]
     ) -> None:
         sled_text = each_sled_serializer.to_sled(expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data

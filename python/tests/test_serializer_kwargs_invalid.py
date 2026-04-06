@@ -1,7 +1,7 @@
 from typing import Any, Dict, NamedTuple
 import pytest
 
-import pysled
+import parsled
 
 
 @pytest.fixture(scope="module", params=("-", ">", " | ", "\t\\"))
@@ -31,24 +31,24 @@ def invalid_ser_args_hex_length(request: pytest.FixtureRequest) -> HexLength:
 
 class TestToSledKwargsInvalid:
     @pytest.fixture(scope="class")
-    def arbitrary_data(self) -> Dict[str, pysled.Entity]:
+    def arbitrary_data(self) -> Dict[str, parsled.Entity]:
         return {"greeting": "Hello, World!"}
 
     def test_invalid_indent(
         self,
         invalid_ser_arg_indent: str,
-        arbitrary_data: Dict[str, pysled.Entity],
+        arbitrary_data: Dict[str, parsled.Entity],
     ) -> None:
         with pytest.raises(ValueError):
-            pysled.to_sled(arbitrary_data, indent=invalid_ser_arg_indent)
+            parsled.to_sled(arbitrary_data, indent=invalid_ser_arg_indent)
 
     def test_invalid_hex_length(
         self,
         invalid_ser_args_hex_length: HexLength,
-        arbitrary_data: Dict[str, pysled.Entity],
+        arbitrary_data: Dict[str, parsled.Entity],
     ) -> None:
         with pytest.raises(ValueError):
-            pysled.to_sled(
+            parsled.to_sled(
                 arbitrary_data,
                 hex_bytes_per_separator=invalid_ser_args_hex_length.hex_bytes_per_separator,
                 hex_line_length=invalid_ser_args_hex_length.hex_line_length,
@@ -58,13 +58,13 @@ class TestToSledKwargsInvalid:
 class TestSerializerKwargsInvalid:
     def test_invalid_indent(self, invalid_ser_arg_indent: str) -> None:
         with pytest.raises(ValueError):
-            pysled.SledSerializer(indent=invalid_ser_arg_indent)
+            parsled.SledSerializer(indent=invalid_ser_arg_indent)
 
     def test_invalid_hex_length(
         self, invalid_ser_args_hex_length: HexLength
     ) -> None:
         with pytest.raises(ValueError):
-            pysled.SledSerializer(
+            parsled.SledSerializer(
                 hex_bytes_per_separator=invalid_ser_args_hex_length.hex_bytes_per_separator,
                 hex_line_length=invalid_ser_args_hex_length.hex_line_length,
             )
@@ -73,6 +73,6 @@ class TestSerializerKwargsInvalid:
 class TestSerializerBasicKwargsInvalid:
     def test_invalid_indent(self, invalid_ser_arg_indent: str) -> None:
         with pytest.raises(ValueError):
-            pysled._serializer_basic.SledSerializerBasic(
+            parsled._serializer_basic.SledSerializerBasic(
                 indent=invalid_ser_arg_indent
             )

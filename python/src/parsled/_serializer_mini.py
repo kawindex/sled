@@ -13,7 +13,7 @@ Approach #2 may be useful if you want to set a configuration once
 and reuse that for serialization multiple times.
 
 ```python
-from pysled import SledSerializerMini, to_sled_mini
+from parsled import SledSerializerMini, to_sled_mini
 
 data = {}
 other_data = {}
@@ -31,14 +31,14 @@ other_sled_output = serializer.to_sled(other_data)
 from collections.abc import Iterable
 from typing import Mapping
 
-from pysled._serializer_basic import (
+from parsled._serializer_basic import (
     DEFAULT_ALWAYS_QUOTE,
     DEFAULT_ASCII_ONLY,
     DEFAULT_HEX_UPPER_CASE,
     DEFAULT_USE_TOP_LEVEL_BRACES,
     SledSerializerBasic,
 )
-from pysled.spec import (
+from parsled.spec import (
     DEFAULT_DECIMAL_MARK,
     DEFAULT_EXPONENT_PREFIX,
     DEFAULT_QUOTE_MARK,

@@ -3,7 +3,7 @@ from typing import Any, Dict, Mapping
 
 import pytest
 
-import pysled
+import parsled
 
 
 @pytest.fixture(scope="module")
@@ -30,7 +30,7 @@ class TestHexLoremParse:
         return sled_path.read_text().strip()
 
     @pytest.fixture(scope="class")
-    def expected_data(self, lorem_ipsum: bytes) -> Dict[str, pysled.Entity]:
+    def expected_data(self, lorem_ipsum: bytes) -> Dict[str, parsled.Entity]:
         by_separator = {
             "nothing": lorem_ipsum,
             "underscore": lorem_ipsum,
@@ -44,9 +44,9 @@ class TestHexLoremParse:
         }
 
     def test_parse(
-        self, sled_text: str, expected_data: Dict[str, pysled.Entity]
+        self, sled_text: str, expected_data: Dict[str, parsled.Entity]
     ) -> None:
-        actual_data = pysled.from_sled(sled_text)
+        actual_data = parsled.from_sled(sled_text)
         assert expected_data == actual_data
 
 
@@ -62,8 +62,8 @@ class TestHexLoremRoundTrip:
         return {arbitrary_key: lorem_ipsum}
 
     def test_round_trip(self, expected_data: Dict[str, bytes]) -> None:
-        sled_text = pysled.to_sled(expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(expected_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data
 
     def test_round_trip_with_hex_kwargs(
@@ -71,20 +71,20 @@ class TestHexLoremRoundTrip:
         expected_data: Dict[str, bytes],
         sled_serializer_kwargs_hex: Mapping[str, Any],
     ) -> None:
-        sled_text = pysled.to_sled(expected_data, **sled_serializer_kwargs_hex)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(expected_data, **sled_serializer_kwargs_hex)
+        round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data
 
     def test_round_trip_mini(self, expected_data: Dict[str, bytes]) -> None:
-        sled_text = pysled.to_sled_mini(expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(expected_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data
 
     def test_round_trip_serializer(
         self, each_sled_serializer, expected_data: Dict[str, bytes]
     ) -> None:
         sled_text = each_sled_serializer.to_sled(expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data
 
     def test_round_trip_serializer_with_hex_kwargs(
@@ -92,7 +92,7 @@ class TestHexLoremRoundTrip:
         expected_data: Dict[str, bytes],
         sled_serializer_kwargs_hex: Mapping[str, Any],
     ) -> None:
-        serializer = pysled.SledSerializer(**sled_serializer_kwargs_hex)
+        serializer = parsled.SledSerializer(**sled_serializer_kwargs_hex)
         sled_text = serializer.to_sled(expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data

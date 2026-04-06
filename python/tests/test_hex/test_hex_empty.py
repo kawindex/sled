@@ -3,7 +3,7 @@ from typing import Dict
 
 import pytest
 
-import pysled
+import parsled
 
 
 class TestHexEmpty:
@@ -30,5 +30,5 @@ class TestHexEmpty:
     def test_parse(
         self, sled_text: str, expected_data: Dict[str, bytes]
     ) -> None:
-        actual_data = pysled.from_sled(sled_text)
+        actual_data = parsled.from_sled(sled_text)
         assert expected_data == actual_data

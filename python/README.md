@@ -1,4 +1,4 @@
-# `pysled`
+# `parsled`
 
 Python package for parsing Sled and serializing Python objects as Sled.
 
@@ -8,7 +8,7 @@ Python package for parsing Sled and serializing Python objects as Sled.
 To parse Sled into a Python `dict`, call `from_sled()`.
 
 ```python
-from pysled import from_sled
+from parsled import from_sled
 
 with open("path/to/my_file.sled", mode="r") as f:
     data = from_sled(f.read())
@@ -29,7 +29,7 @@ Approach #2 may be useful if you want to set a configuration once
 and reuse that for serialization multiple times.
 
 ```python
-from pysled import SledSerializer, to_sled
+from parsled import SledSerializer, to_sled
 
 data = {}
 other_data = {}

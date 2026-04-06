@@ -3,7 +3,7 @@ from typing import Dict
 
 import pytest
 
-import pysled
+import parsled
 
 
 @pytest.fixture(scope="module")
@@ -41,9 +41,9 @@ class TestIntegerDoubleSignInvalidValue:
         return sled_path.read_text().strip()
 
     def test_parse(self, sled_text: str) -> None:
-        with pytest.raises(pysled.SledError) as excinfo:
-            pysled.from_sled(sled_text)
-        assert pysled.SledErrorCategory.SYNTAX == excinfo.value.error_category
+        with pytest.raises(parsled.SledError) as excinfo:
+            parsled.from_sled(sled_text)
+        assert parsled.SledErrorCategory.SYNTAX == excinfo.value.error_category
 
 
 class TestIntegerDoubleSignValidValue:
@@ -66,7 +66,7 @@ class TestIntegerDoubleSignValidValue:
     def test_parse(
         self, sled_text: str, expected_data: Dict[str, int]
     ) -> None:
-        actual_data = pysled.from_sled(sled_text)
+        actual_data = parsled.from_sled(sled_text)
         assert expected_data == actual_data
 
 
@@ -100,9 +100,9 @@ class TestIntegerDoubleSignInvalidKey:
         return sled_path.read_text().strip()
 
     def test_parse(self, sled_text: str) -> None:
-        with pytest.raises(pysled.SledError) as excinfo:
-            pysled.from_sled(sled_text)
-        assert pysled.SledErrorCategory.SYNTAX == excinfo.value.error_category
+        with pytest.raises(parsled.SledError) as excinfo:
+            parsled.from_sled(sled_text)
+        assert parsled.SledErrorCategory.SYNTAX == excinfo.value.error_category
 
 
 class TestIntegerDoubleSignValidKey:
@@ -127,5 +127,5 @@ class TestIntegerDoubleSignValidKey:
     def test_parse(
         self, sled_text: str, expected_data: Dict[str, Dict[int, str]]
     ) -> None:
-        actual_data = pysled.from_sled(sled_text)
+        actual_data = parsled.from_sled(sled_text)
         assert expected_data == actual_data

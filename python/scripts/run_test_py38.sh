@@ -16,7 +16,7 @@ cd ${GITHUB_WORKSPACE}/python/
 echo '```' >> ${GITHUB_STEP_SUMMARY}
 
 uv run pytest \
-  --cov=pysled \
+  --cov=parsled \
   --cov-report=term-missing \
   ${GITHUB_WORKSPACE}/python/tests/ \
   | tee --append ${GITHUB_STEP_SUMMARY}

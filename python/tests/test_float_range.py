@@ -5,7 +5,7 @@ from typing import Any, Dict
 
 import pytest
 
-import pysled
+import parsled
 
 
 @pytest.fixture(scope="module")
@@ -51,9 +51,9 @@ class TestFloatOutOfRange:
         return sled_path.read_text().strip()
 
     def test_parse(self, sled_text: str) -> None:
-        with pytest.raises(pysled.SledError) as excinfo:
-            pysled.from_sled(sled_text)
-        assert pysled.SledErrorCategory.NUMBER_RANGE == excinfo.value.error_category
+        with pytest.raises(parsled.SledError) as excinfo:
+            parsled.from_sled(sled_text)
+        assert parsled.SledErrorCategory.NUMBER_RANGE == excinfo.value.error_category
 
 
 class TestLargeFloat:
@@ -101,7 +101,7 @@ class TestLargeFloat:
         sled_text: str,
         expected_parse_data: Dict[str, Any],
     ) -> None:
-        actual_data = pysled.from_sled(sled_text)
+        actual_data = parsled.from_sled(sled_text)
         assert expected_parse_data == actual_data
         for by_exp_case in actual_data.values():
             for by_exp_sign in by_exp_case.values():
@@ -130,8 +130,8 @@ class TestLargeFloat:
         round_trip_input_data: Dict[str, float],
         round_trip_expected_data: Dict[str, Any],
     ) -> None:
-        sled_text = pysled.to_sled(round_trip_input_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(round_trip_input_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert round_trip_expected_data == round_trip_data
 
     def test_round_trip_mini(
@@ -139,8 +139,8 @@ class TestLargeFloat:
         round_trip_input_data: Dict[str, float],
         round_trip_expected_data: Dict[str, Any],
     ) -> None:
-        sled_text = pysled.to_sled_mini(round_trip_input_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(round_trip_input_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert round_trip_expected_data == round_trip_data
 
     def test_round_trip_serializer(
@@ -150,7 +150,7 @@ class TestLargeFloat:
         round_trip_expected_data: Dict[str, Any],
     ) -> None:
         sled_text = each_sled_serializer.to_sled(round_trip_input_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        round_trip_data = parsled.from_sled(sled_text)
         assert round_trip_expected_data == round_trip_data
 
 
@@ -251,7 +251,7 @@ class TestSmallFloat:
         sled_text: str,
         expected_parse_data: Dict[str, Any],
     ) -> None:
-        actual_data = pysled.from_sled(sled_text)
+        actual_data = parsled.from_sled(sled_text)
         assert expected_parse_data == actual_data
         for by_exp_case in actual_data.values():
             for by_sign in by_exp_case.values():
@@ -299,8 +299,8 @@ class TestSmallFloat:
         round_trip_input_data: Dict[str, Dict[str, float]],
         round_trip_expected_data: Dict[str, Dict[str, Any]],
     ) -> None:
-        sled_text = pysled.to_sled(round_trip_input_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(round_trip_input_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert round_trip_expected_data == round_trip_data
 
     def test_round_trip_mini(
@@ -308,8 +308,8 @@ class TestSmallFloat:
         round_trip_input_data: Dict[str, Dict[str, float]],
         round_trip_expected_data: Dict[str, Dict[str, Any]],
     ) -> None:
-        sled_text = pysled.to_sled_mini(round_trip_input_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(round_trip_input_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert round_trip_expected_data == round_trip_data
 
     def test_round_trip_serializer(
@@ -319,5 +319,5 @@ class TestSmallFloat:
         round_trip_expected_data: Dict[str, Dict[str, Any]],
     ) -> None:
         sled_text = each_sled_serializer.to_sled(round_trip_input_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        round_trip_data = parsled.from_sled(sled_text)
         assert round_trip_expected_data == round_trip_data

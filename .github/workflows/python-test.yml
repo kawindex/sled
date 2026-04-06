@@ -51,7 +51,7 @@ jobs:
         working-directory: ${{ github.workspace }}/python
         run: >
           uv run pytest
-          --cov=pysled
+          --cov=parsled
           --cov-report=term-missing
           --cov-report=markdown-append:$GITHUB_STEP_SUMMARY
           tests/

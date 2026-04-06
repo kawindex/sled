@@ -23,10 +23,10 @@ from typing import (
     Callable, Container, Dict, List, Literal, Optional, Tuple, Union
 )
 
-from pysled._parser_metadata import ParseSnapshot, SledType
-from pysled._sled_error import SledError, SledErrorCategory
-from pysled._keyword_literal import KEYWORD_LITERALS
-from pysled.spec import (
+from parsled._parser_metadata import ParseSnapshot, SledType
+from parsled._sled_error import SledError, SledErrorCategory
+from parsled._keyword_literal import KEYWORD_LITERALS
+from parsled.spec import (
     COMMENT_DISALLOWED_SYMBOLS,
     COMMENT_MARK,
     CONCAT_CLOSE_MARK,
@@ -111,7 +111,7 @@ class Parser:
     Since we standardize all line separators to `DEFAULT_LINE_SEPARATOR`,
     the value of `self._index` is not guaranteed to be the real current index
     within the original input text, so it should never be exposed
-    to `pysled` users (e.g. in error messages).
+    to `parsled` users (e.g. in error messages).
     """
 
     _line_num: int

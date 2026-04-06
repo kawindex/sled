@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-import pysled
+import parsled
 
 
 class TestFloatZero:
@@ -20,7 +20,7 @@ class TestFloatZero:
         return sled_path.read_text().strip()
 
     def test_parser(self, sled_text: str, arbitrary_key: str) -> None:
-        actual_dict = pysled.from_sled(sled_text)
+        actual_dict = parsled.from_sled(sled_text)
         assert 1 == len(actual_dict)
         actual_list = actual_dict[arbitrary_key]
         for actual in actual_list:
