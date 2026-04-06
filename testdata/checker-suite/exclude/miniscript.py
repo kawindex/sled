@@ -1,6 +1,6 @@
 import json
 
-import pysled
+import parsled
 
 
 if __name__ == "__main__":
@@ -8,5 +8,5 @@ if __name__ == "__main__":
         data = json.load(fr)
     
     with open("p01-mini.sd", mode="w", encoding="utf-8") as fw:
-        s = pysled.to_sled({"outermost": data}, minify=True, ascii_only=True)
+        s = parsled.to_sled({"outermost": data}, minify=True, ascii_only=True)
         fw.write(s)

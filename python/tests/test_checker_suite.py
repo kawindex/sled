@@ -9,12 +9,12 @@ from typing import Dict, NamedTuple
 
 import pytest
 
-import pysled
+import parsled
 
 
 class CheckerSuiteTestCase(NamedTuple):
     sled_file_name: str
-    expected_data: Dict[str, pysled.Entity]
+    expected_data: Dict[str, parsled.Entity]
 
 
 @pytest.fixture(scope="module")
@@ -63,24 +63,24 @@ class TestCheckerSuiteP01:
     def test_parse(
         self, sled_text: str, expected_dict: Dict[str, list]
     ) -> None:
-        actual_dict = pysled.from_sled(sled_text)
+        actual_dict = parsled.from_sled(sled_text)
         assert expected_dict == actual_dict
 
     def test_round_trip(self, expected_dict: Dict[str, list]) -> None:
-        sled_text = pysled.to_sled(expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(expected_dict)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert expected_dict == round_trip_dict
 
     def test_round_trip_mini(self, expected_dict: Dict[str, list]) -> None:
-        sled_text = pysled.to_sled_mini(expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(expected_dict)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert expected_dict == round_trip_dict
 
     def test_round_trip_serializer(
         self, each_sled_serializer, expected_dict: Dict[str, list]
     ) -> None:
         sled_text = each_sled_serializer.to_sled(expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert expected_dict == round_trip_dict
 
 
@@ -231,28 +231,28 @@ class TestCheckerSuiteInvalid:
         return control_sled_path.read_text().strip()
 
     def test_parse_invalid(self, invalid_sled_text: str) -> None:
-        with pytest.raises(pysled.SledError) as excinfo:
-            pysled.from_sled(invalid_sled_text)
-        assert pysled.SledErrorCategory.SYNTAX == excinfo.value.error_category
+        with pytest.raises(parsled.SledError) as excinfo:
+            parsled.from_sled(invalid_sled_text)
+        assert parsled.SledErrorCategory.SYNTAX == excinfo.value.error_category
 
     def test_parse_control(
         self, invalid_test_case: CheckerSuiteTestCase, control_sled_text: str
     ) -> None:
-        actual_data = pysled.from_sled(control_sled_text)
+        actual_data = parsled.from_sled(control_sled_text)
         assert invalid_test_case.expected_data == actual_data
 
     def test_control_round_trip(
         self, invalid_test_case: CheckerSuiteTestCase
     ) -> None:
-        sled_text = pysled.to_sled(invalid_test_case.expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(invalid_test_case.expected_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert invalid_test_case.expected_data == round_trip_data
 
     def test_control_round_trip_mini(
         self, invalid_test_case: CheckerSuiteTestCase
     ) -> None:
-        sled_text = pysled.to_sled_mini(invalid_test_case.expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(invalid_test_case.expected_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert invalid_test_case.expected_data == round_trip_data
 
     def test_control_round_trip_serializer(
@@ -261,7 +261,7 @@ class TestCheckerSuiteInvalid:
         sled_text = each_sled_serializer.to_sled(
             invalid_test_case.expected_data
         )
-        round_trip_data = pysled.from_sled(sled_text)
+        round_trip_data = parsled.from_sled(sled_text)
         assert invalid_test_case.expected_data == round_trip_data
 
 
@@ -351,26 +351,26 @@ class TestCheckerSuiteValid:
     def test_parse(
         self, valid_test_case: CheckerSuiteTestCase, sled_text: str
     ) -> None:
-        actual_data = pysled.from_sled(sled_text)
+        actual_data = parsled.from_sled(sled_text)
         assert valid_test_case.expected_data == actual_data
 
     def test_round_trip(
         self, valid_test_case: CheckerSuiteTestCase
     ) -> None:
-        sled_text = pysled.to_sled(valid_test_case.expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(valid_test_case.expected_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert valid_test_case.expected_data == round_trip_data
 
     def test_round_trip_mini(
         self, valid_test_case: CheckerSuiteTestCase
     ) -> None:
-        sled_text = pysled.to_sled_mini(valid_test_case.expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(valid_test_case.expected_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert valid_test_case.expected_data == round_trip_data
 
     def test_round_trip_serializer(
         self, each_sled_serializer, valid_test_case: CheckerSuiteTestCase
     ) -> None:
         sled_text = each_sled_serializer.to_sled(valid_test_case.expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        round_trip_data = parsled.from_sled(sled_text)
         assert valid_test_case.expected_data == round_trip_data

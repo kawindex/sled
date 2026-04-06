@@ -2,8 +2,8 @@ from collections import defaultdict
 from enum import Enum
 from typing import DefaultDict, List, Tuple, TypeVar, Union
 
-from pysled._parser_metadata import ParseSnapshot
-from pysled.spec import DEFAULT_LINE_SEPARATOR, HORIZONTAL_SPACE_SET
+from parsled._parser_metadata import ParseSnapshot
+from parsled.spec import DEFAULT_LINE_SEPARATOR, HORIZONTAL_SPACE_SET
 
 
 ERROR_POINTER_CHAR = "^"

@@ -3,7 +3,7 @@ from typing import Any, Mapping, NamedTuple
 
 import pytest
 
-from pysled._serializer import HexHorizontalSeparator
+from parsled._serializer import HexHorizontalSeparator
 
 
 class HexLength(NamedTuple):

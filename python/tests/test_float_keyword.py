@@ -4,7 +4,7 @@ from typing import Dict
 
 import pytest
 
-import pysled
+import parsled
 
 
 @pytest.fixture(scope="module")
@@ -41,9 +41,9 @@ class TestFloatKeywordInvalid:
         return sled_path.read_text().strip()
 
     def test_parse_invalid(self, sled_text: str) -> None:
-        with pytest.raises(pysled.SledError) as excinfo:
-            pysled.from_sled(sled_text)
-        assert pysled.SledErrorCategory.SYNTAX == excinfo.value.error_category
+        with pytest.raises(parsled.SledError) as excinfo:
+            parsled.from_sled(sled_text)
+        assert parsled.SledErrorCategory.SYNTAX == excinfo.value.error_category
 
 
 class TestFloatKeywordValid:
@@ -56,7 +56,7 @@ class TestFloatKeywordValid:
         return sled_path.read_text().strip()
 
     def test_parse_valid(self, sled_text: str) -> None:
-        d = pysled.from_sled(sled_text)
+        d = parsled.from_sled(sled_text)
         check_float_keyword_valid(d)
 
     @pytest.fixture(scope="class")
@@ -76,24 +76,24 @@ class TestFloatKeywordValid:
         }
 
     def test_round_trip(self, input_data: Dict[str, float]) -> None:
-        round_trip_sled_text = pysled.to_sled(input_data)
-        round_trip_data = pysled.from_sled(round_trip_sled_text)
+        round_trip_sled_text = parsled.to_sled(input_data)
+        round_trip_data = parsled.from_sled(round_trip_sled_text)
         check_float_keyword_valid(round_trip_data)
 
     def test_round_trip_mini(self, input_data: Dict[str, float]) -> None:
-        round_trip_sled_text = pysled.to_sled_mini(input_data)
-        round_trip_data = pysled.from_sled(round_trip_sled_text)
+        round_trip_sled_text = parsled.to_sled_mini(input_data)
+        round_trip_data = parsled.from_sled(round_trip_sled_text)
         check_float_keyword_valid(round_trip_data)
 
     def test_round_trip_serializer(
         self, each_sled_serializer, input_data: Dict[str, float]
     ) -> None:
         round_trip_sled_text = each_sled_serializer.to_sled(input_data)
-        round_trip_data = pysled.from_sled(round_trip_sled_text)
+        round_trip_data = parsled.from_sled(round_trip_sled_text)
         check_float_keyword_valid(round_trip_data)
 
 
-def check_float_keyword_valid(d: Dict[str, pysled.Entity]) -> None:
+def check_float_keyword_valid(d: Dict[str, parsled.Entity]) -> None:
     assert 11 == len(d)
 
     for k in ("inf", "@inf", "x"):

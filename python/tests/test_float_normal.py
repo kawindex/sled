@@ -4,7 +4,7 @@ from typing import Dict, List
 
 import pytest
 
-import pysled
+import parsled
 
 
 class TestFloatNormal:
@@ -61,7 +61,7 @@ class TestFloatNormal:
         expected_dict: Dict[str, List[float]],
         arbitrary_key: str,
     ) -> None:
-        actual_dict = pysled.from_sled(sled_text)
+        actual_dict = parsled.from_sled(sled_text)
         assert expected_dict == actual_dict
         actual_list = actual_dict[arbitrary_key]
         for actual in actual_list:
@@ -73,8 +73,8 @@ class TestFloatNormal:
         expected_dict: Dict[str, List[float]],
         arbitrary_key: str,
     ) -> None:
-        sled_text = pysled.to_sled(input_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(input_dict)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert expected_dict == round_trip_dict
         round_trip_list = round_trip_dict[arbitrary_key]
         for actual in round_trip_list:
@@ -86,8 +86,8 @@ class TestFloatNormal:
         expected_dict: Dict[str, List[float]],
         arbitrary_key: str,
     ) -> None:
-        sled_text = pysled.to_sled_mini(input_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(input_dict)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert expected_dict == round_trip_dict
         round_trip_list = round_trip_dict[arbitrary_key]
         for actual in round_trip_list:
@@ -101,7 +101,7 @@ class TestFloatNormal:
         arbitrary_key: str,
     ) -> None:
         sled_text = each_sled_serializer.to_sled(input_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        round_trip_dict = parsled.from_sled(sled_text)
         assert expected_dict == round_trip_dict
         round_trip_list = round_trip_dict[arbitrary_key]
         for actual in round_trip_list:

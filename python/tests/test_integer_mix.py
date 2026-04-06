@@ -3,7 +3,7 @@ from typing import Dict, List
 
 import pytest
 
-import pysled
+import parsled
 
 
 class TestIntegerMix:
@@ -42,7 +42,7 @@ class TestIntegerMix:
         expected_dict: Dict[str, List[int]],
         arbitrary_key: str,
     ) -> None:
-        actual_dict = pysled.from_sled(sled_text)
+        actual_dict = parsled.from_sled(sled_text)
         assert expected_dict == actual_dict
         actual_list = actual_dict[arbitrary_key]
         for actual in actual_list:
@@ -51,8 +51,8 @@ class TestIntegerMix:
     def test_round_trip(
         self, expected_dict: Dict[str, List[int]], arbitrary_key: str
     ) -> None:
-        sled_text = pysled.to_sled(expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(expected_dict)
+        round_trip_dict = parsled.from_sled(sled_text)
 
         assert expected_dict == round_trip_dict
         round_trip_list = round_trip_dict[arbitrary_key]
@@ -62,8 +62,8 @@ class TestIntegerMix:
     def test_round_trip_mini(
         self, expected_dict: Dict[str, List[int]], arbitrary_key: str
     ) -> None:
-        sled_text = pysled.to_sled_mini(expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(expected_dict)
+        round_trip_dict = parsled.from_sled(sled_text)
 
         assert expected_dict == round_trip_dict
         round_trip_list = round_trip_dict[arbitrary_key]
@@ -77,7 +77,7 @@ class TestIntegerMix:
         arbitrary_key: str,
     ) -> None:
         sled_text = each_sled_serializer.to_sled(expected_dict)
-        round_trip_dict = pysled.from_sled(sled_text)
+        round_trip_dict = parsled.from_sled(sled_text)
 
         assert expected_dict == round_trip_dict
         round_trip_list = round_trip_dict[arbitrary_key]

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-import pysled
+import parsled
 
 
 @pytest.fixture(scope="session")
@@ -18,9 +18,9 @@ def core_test_data_dir(sled_test_data_dir: Path) -> Path:
 @pytest.fixture(
     scope="session",
     params=(
-        pysled.SledSerializer,
-        pysled.SledSerializerMini,
-        pysled._serializer_basic.SledSerializerBasic,
+        parsled.SledSerializer,
+        parsled.SledSerializerMini,
+        parsled._serializer_basic.SledSerializerBasic,
     )
 )
 def each_sled_serializer(request: pytest.FixtureRequest):
@@ -28,15 +28,15 @@ def each_sled_serializer(request: pytest.FixtureRequest):
 
 
 @pytest.fixture(scope="session")
-def sled_serializer() -> pysled.SledSerializer:
-    return pysled.SledSerializer()
+def sled_serializer() -> parsled.SledSerializer:
+    return parsled.SledSerializer()
 
 
 @pytest.fixture(scope="session")
-def sled_serializer_mini() -> pysled.SledSerializerMini:
-    return pysled.SledSerializerMini()
+def sled_serializer_mini() -> parsled.SledSerializerMini:
+    return parsled.SledSerializerMini()
 
 
 @pytest.fixture(scope="session")
-def sled_serializer_basic() -> pysled._serializer_basic.SledSerializerBasic:
-    return pysled._serializer_basic.SledSerializerBasic()
+def sled_serializer_basic() -> parsled._serializer_basic.SledSerializerBasic:
+    return parsled._serializer_basic.SledSerializerBasic()

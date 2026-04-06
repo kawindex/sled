@@ -6,7 +6,7 @@ from enum import Enum
 from types import MappingProxyType
 from typing import Mapping
 
-from pysled.spec import KEYWORD_MARK, Entity
+from parsled.spec import KEYWORD_MARK, Entity
 
 
 @dataclasses.dataclass(frozen=True)

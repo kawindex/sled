@@ -3,7 +3,7 @@ from typing import Dict, List
 
 import pytest
 
-import pysled
+import parsled
 
 
 class TestIntegerValue:
@@ -29,7 +29,7 @@ class TestIntegerValue:
         expected_dict: Dict[str, List[int]],
         arbitrary_key: str,
     ) -> None:
-        actual_dict = pysled.from_sled(sled_text)
+        actual_dict = parsled.from_sled(sled_text)
         assert expected_dict == actual_dict
         actual_list = actual_dict[arbitrary_key]
         for actual in actual_list:

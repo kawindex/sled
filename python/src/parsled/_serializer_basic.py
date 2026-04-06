@@ -9,9 +9,9 @@ import inspect
 import math
 from typing import Dict, Iterable, Mapping, TypeVar
 
-from pysled._keyword_literal import KeywordLiteral
-from pysled._sled_error import SledError, SledErrorCategory
-from pysled.spec import (
+from parsled._keyword_literal import KeywordLiteral
+from parsled._sled_error import SledError, SledErrorCategory
+from parsled.spec import (
     C0_CONTROL_SET,
     C0_SIMPLE_ESCAPE_SET,
     DEFAULT_DECIMAL_MARK,

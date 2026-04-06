@@ -3,7 +3,7 @@ from typing import Dict
 
 import pytest
 
-import pysled
+import parsled
 
 
 class TestIntegerRangeKey:
@@ -25,9 +25,9 @@ class TestIntegerRangeKey:
         return overflow_sled_path.read_text().strip()
 
     def test_overflow(self, overflow_sled_text: str) -> None:
-        with pytest.raises(pysled.SledError) as excinfo:
-            pysled.from_sled(overflow_sled_text)
-        assert pysled.SledErrorCategory.NUMBER_RANGE == excinfo.value.error_category
+        with pytest.raises(parsled.SledError) as excinfo:
+            parsled.from_sled(overflow_sled_text)
+        assert parsled.SledErrorCategory.NUMBER_RANGE == excinfo.value.error_category
 
     @pytest.fixture(scope="class")
     def control_sled_path(self, integer_range_data_dir: Path) -> Path:
@@ -61,21 +61,21 @@ class TestIntegerRangeKey:
         control_sled_text: str,
         control_expected_dict: Dict[str, Dict[int, str]],
     ) -> None:
-        actual_data = pysled.from_sled(control_sled_text)
+        actual_data = parsled.from_sled(control_sled_text)
         assert control_expected_dict == actual_data
 
     def test_control_round_trip(
         self, control_expected_dict: Dict[str, Dict[int, str]]
     ) -> None:
-        sled_text = pysled.to_sled(control_expected_dict)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(control_expected_dict)
+        round_trip_data = parsled.from_sled(sled_text)
         assert control_expected_dict == round_trip_data
 
     def test_control_round_trip_mini(
         self, control_expected_dict: Dict[str, Dict[int, str]]
     ) -> None:
-        sled_text = pysled.to_sled_mini(control_expected_dict)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(control_expected_dict)
+        round_trip_data = parsled.from_sled(sled_text)
         assert control_expected_dict == round_trip_data
 
     def test_control_round_trip_serializer(
@@ -84,7 +84,7 @@ class TestIntegerRangeKey:
         control_expected_dict: Dict[str, Dict[int, str]],
     ) -> None:
         sled_text = each_sled_serializer.to_sled(control_expected_dict)
-        round_trip_data = pysled.from_sled(sled_text)
+        round_trip_data = parsled.from_sled(sled_text)
         assert control_expected_dict == round_trip_data
 
 
@@ -107,9 +107,9 @@ class TestIntegerRangeValue:
         return overflow_sled_path.read_text().strip()
 
     def test_overflow(self, overflow_sled_text: str) -> None:
-        with pytest.raises(pysled.SledError) as excinfo:
-            pysled.from_sled(overflow_sled_text)
-        assert pysled.SledErrorCategory.NUMBER_RANGE == excinfo.value.error_category
+        with pytest.raises(parsled.SledError) as excinfo:
+            parsled.from_sled(overflow_sled_text)
+        assert parsled.SledErrorCategory.NUMBER_RANGE == excinfo.value.error_category
 
     @pytest.fixture(scope="class")
     def control_sled_path(self, integer_range_data_dir: Path) -> Path:
@@ -137,26 +137,26 @@ class TestIntegerRangeValue:
         control_sled_text: str,
         control_expected_data: Dict[str, int],
     ) -> None:
-        actual_data = pysled.from_sled(control_sled_text)
+        actual_data = parsled.from_sled(control_sled_text)
         assert control_expected_data == actual_data
 
     def test_control_round_trip(
         self, control_expected_data: Dict[str, int]
     ) -> None:
-        sled_text = pysled.to_sled(control_expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled(control_expected_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert control_expected_data == round_trip_data
 
     def test_control_round_trip_mini(
         self, control_expected_data: Dict[str, int]
     ) -> None:
-        sled_text = pysled.to_sled_mini(control_expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        sled_text = parsled.to_sled_mini(control_expected_data)
+        round_trip_data = parsled.from_sled(sled_text)
         assert control_expected_data == round_trip_data
 
     def test_control_round_trip_serializer(
         self, each_sled_serializer, control_expected_data: Dict[str, int]
     ) -> None:
         sled_text = each_sled_serializer.to_sled(control_expected_data)
-        round_trip_data = pysled.from_sled(sled_text)
+        round_trip_data = parsled.from_sled(sled_text)
         assert control_expected_data == round_trip_data
