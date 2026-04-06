@@ -33,7 +33,7 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/kawindex/sled"
+Homepage = "https://github.com/kawindex/sled/python"
 Source = "https://github.com/kawindex/sled.git"
 Issues = "https://github.com/kawindex/sled/issues"
 
