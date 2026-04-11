@@ -444,8 +444,7 @@ class Parser:
                     f"but got {repr(self._peek())}."
                 )
         elif c == KEYWORD_MARK:
-            keyword_evaluation, _ = self._parse_keyword()
-            return keyword_evaluation
+            return self._parse_keyword()
         elif c in NUMBER_START_SET:
             number_evaluation, _ = self._parse_number_excl_keyword()
             return number_evaluation
@@ -630,9 +629,7 @@ class Parser:
 
     # Keywords
 
-    def _parse_keyword(self) -> Tuple[
-        Union[str, bytes, float, bool, None], ParseSnapshot
-    ]:
+    def _parse_keyword(self) -> Union[str, bytes, float, bool, None]:
         """
         Parses an `Entity` from a keyword.
 
@@ -658,7 +655,7 @@ class Parser:
         # Keyword literal
         keyword_literal_spec = KEYWORD_LITERALS.get(keyword_name)
         if keyword_literal_spec is not None:
-            return keyword_literal_spec.evaluation, keyword_snapshot
+            return keyword_literal_spec.evaluation
 
         # `hex`
         if keyword_name == HEX_KEYWORD_NAME:
@@ -673,16 +670,10 @@ class Parser:
                     f"but got {repr(self._peek())}."
                 )
             self._advance()
-            content = self._parse_hex_content()
+            evaluation = self._parse_hex_content()
             if self._peek() == HEX_CLOSE_MARK:
                 self._advance()
-                return content, ParseSnapshot(
-                    start_index=keyword_snapshot.start_index,
-                    end_index=self._index,
-                    line_num=keyword_snapshot.line_num,
-                    line_start=keyword_snapshot.line_start,
-                    sled_type=SledType.HEX,
-                )
+                return evaluation
             elif self._is_at_end():
                 raise self._make_invalid_sled_error(
                     "Reached end of input without closing hex."
@@ -695,7 +686,8 @@ class Parser:
 
         # `concat`
         if keyword_name == CONCAT_KEYWORD_NAME:
-            return self._handle_concat_after_keyword(keyword_snapshot)
+            evaluation, _ = self._handle_concat_after_keyword(keyword_snapshot)
+            return evaluation
 
         raise self._make_invalid_sled_error(
             reason=f'Invalid keyword "{KEYWORD_MARK}{keyword_name}".',
@@ -840,9 +832,9 @@ class Parser:
 
     # Number types
 
-    def _parse_number_excl_keyword(
-        self
-    ) -> Tuple[Union[int, float], ParseSnapshot]:
+    def _parse_number_excl_keyword(self) -> Tuple[
+        Union[int, float], ParseSnapshot
+    ]:
         """
         Parses an `integer` or a `float`, validating that its value is not
         one that should be represented by a keyword (`@inf`, `@ninf`, `@nan`).
