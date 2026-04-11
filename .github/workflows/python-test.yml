@@ -58,8 +58,8 @@ jobs:
 
       - name: Run pytest py38
         if: '${{ startsWith( matrix.python-version, ''3.8'' ) }}'
-        run: 'bash "${GITHUB_WORKSPACE}/python/scripts/run_test_py38.sh"'
+        run: 'bash "${GITHUB_WORKSPACE}/python/scripts/pytest_py38.sh"'
 
-      - name: Smoke test without dev dependencies
+      - name: Run smoke test without dev dependencies
         working-directory: ${{ github.workspace }}/python
         run: 'uv run --no-dev "${GITHUB_WORKSPACE}/python/scripts/smoke_test.py"'
