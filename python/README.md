@@ -2,6 +2,8 @@
 
 Python package for parsing Sled and serializing Python objects as Sled.
 
+Sled is a serialization language for developer-friendly reading and writing.
+
 
 ## Parse: Sled to Python `dict`
 
