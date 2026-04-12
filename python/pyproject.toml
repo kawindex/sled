@@ -15,7 +15,7 @@ maintainers = [
 license = "MIT"
 license-files = ["LICENSE"]
 
-keywords = ["sled", "parse", "serialize", "deserialize", "readable"]
+keywords = ["sled", "parse", "serialize", "deserialize", "readable", "language", "format"]
 classifiers = [
   "Intended Audience :: Developers",
   "License :: OSI Approved :: MIT License",
