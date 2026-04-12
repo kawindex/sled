@@ -1,0 +1,12 @@
+name: Python build and publish
+
+on: workflow_dispatch
+
+jobs:
+  placeholder:
+    name: Hello world
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Log commit SHA
+        run: 'echo "commit SHA: $GITHUB_SHA"'
