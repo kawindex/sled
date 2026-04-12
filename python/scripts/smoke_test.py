@@ -64,6 +64,12 @@ def test_round_trip(data: Dict[str, parsled.Entity]) -> None:
     assert data == round_trip_data
 
 
+def test_round_trip_mini(data: Dict[str, parsled.Entity]) -> None:
+    sled_text = parsled.to_sled_mini(data)
+    round_trip_data = parsled.from_sled(sled_text)
+    assert data == round_trip_data
+
+
 if __name__ == "__main__":
     print("Start smoke test...")
 
@@ -73,6 +79,7 @@ if __name__ == "__main__":
         expected_data=REPO_README_DEMO_EXPECTED_DATA,
     )
     test_round_trip(REPO_README_DEMO_EXPECTED_DATA)
+    test_round_trip_mini(REPO_README_DEMO_EXPECTED_DATA)
 
     # checker suite p01
     checker_suite_p01_json_text = CHECKER_SUITE_P01_JSON_PATH.read_text().strip()
@@ -84,5 +91,6 @@ if __name__ == "__main__":
         expected_data=checker_suite_p01_expected_dict,
     )
     test_round_trip(checker_suite_p01_expected_dict)
+    test_round_trip_mini(checker_suite_p01_expected_dict)
 
     print("Smoke test complete. Success!")
