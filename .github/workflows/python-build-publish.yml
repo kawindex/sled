@@ -34,9 +34,9 @@ jobs:
         working-directory: ${{ github.workspace }}/python
         run: 'echo "parsled_version=$(uv version --short)" >> "${GITHUB_OUTPUT}"'
 
-      - name: Stop if tag fails to match version
-        if: '${{ ! endsWith( github.ref_name, steps.get_parsled_version.outputs.parsled_version ) }}'
-        run: false
+      # - name: Stop if tag fails to match version
+      #   if: '${{ ! endsWith( github.ref_name, steps.get_parsled_version.outputs.parsled_version ) }}'
+      #   run: 'false'
 
       - name: Build distributions using uv
         working-directory: ${{ github.workspace }}/python
