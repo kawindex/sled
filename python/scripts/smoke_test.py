@@ -93,4 +93,6 @@ if __name__ == "__main__":
     test_round_trip(checker_suite_p01_expected_dict)
     test_round_trip_mini(checker_suite_p01_expected_dict)
 
+    assert False
+
     print("Smoke test complete. Success!")
