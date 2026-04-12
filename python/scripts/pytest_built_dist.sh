@@ -20,7 +20,7 @@ uv run \
   --isolated \
   --no-project \
   --no-cache \
-  --with ${PARSLED_DIST_PATH} \
+  --with "${PARSLED_DIST_PATH}" \
   --with pytest \
   --with pytest-cov \
   pytest \

@@ -14,6 +14,8 @@ jobs:
     name: Python build
     needs: invoke-python-test
     runs-on: ubuntu-latest
+    outputs:
+      parsled_version: ${{ steps.get_parsled_version.outputs.parsled_version }}
 
     steps:
       - name: Checkout python directory
@@ -68,7 +70,7 @@ jobs:
           - '.tar.gz'
     env:
       UV_PYTHON: ${{ matrix.python-version }}
-      PARSLED_DIST_PATH: ${{ github.workspace }}/python/dist/*${{ matrix.distribution-suffix }}
+      PARSLED_DIST_PATH: ${{ github.workspace }}/python/dist/parsled-${{ needs.python-build.outputs.parsled_version }}${{ matrix.distribution-suffix }}
 
     steps:
       - name: Checkout python/scripts and testdata directories
