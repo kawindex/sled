@@ -52,7 +52,7 @@ jobs:
           path: ${{ github.workspace }}/python/dist
 
   python-test-distribution:
-    name: Python ${{ matrix.python-version }} test ${{ matrix.distribution-suffix }} distribution
+    name: Python ${{ matrix.python-version }} test ${{ matrix.distribution-format.name }} distribution
     needs: python-build
     runs-on: ubuntu-latest
     strategy:
@@ -66,12 +66,14 @@ jobs:
           - '3.12'
           - '3.13'
           - '3.14'
-        distribution-suffix:
-          - '-py3-none-any.whl'
-          - '.tar.gz'
+        distribution-format:
+          - name: wheel
+            suffix: '-py3-none-any.whl'
+          - name: source
+            suffix: '.tar.gz'
     env:
       UV_PYTHON: ${{ matrix.python-version }}
-      PARSLED_DIST_PATH: ${{ github.workspace }}/python/dist/parsled-${{ needs.python-build.outputs.parsled_version }}${{ matrix.distribution-suffix }}
+      PARSLED_DIST_PATH: ${{ github.workspace }}/python/dist/parsled-${{ needs.python-build.outputs.parsled_version }}${{ matrix.distribution-format.suffix }}
 
     steps:
       - name: Checkout python/scripts and testdata directories
@@ -101,10 +103,10 @@ jobs:
           name: parsled-dist
           path: ${{ github.workspace }}/python/dist
 
-      - name: Run pytest on built distribution
+      - name: Run pytest on ${{ matrix.distribution-format.name }} distribution
         run: 'bash "${GITHUB_WORKSPACE}/python/scripts/pytest_built_dist.sh"'
 
-      - name: Smoke test built distribution without pytest
+      - name: Smoke test ${{ matrix.distribution-format.name }} distribution without pytest
         working-directory: ${{ github.workspace }}/python
         run: >
           uv run
