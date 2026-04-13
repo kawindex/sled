@@ -4,6 +4,7 @@ on: workflow_dispatch
 
 env:
   UV_MANAGED_PYTHON: true
+  USE_UV_VERSION: '0.10.12'
 
 jobs:
   invoke-python-test:
@@ -29,7 +30,7 @@ jobs:
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: "0.10.12"
+          version: ${{ env.USE_UV_VERSION }}
 
       - name: Get parsled version
         id: get_parsled_version
@@ -87,7 +88,7 @@ jobs:
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: "0.10.12"
+          version: ${{ env.USE_UV_VERSION }}
 
       - name: Install Python
         working-directory: ${{ github.workspace }}/python
@@ -127,7 +128,7 @@ jobs:
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: "0.10.12"
+          version: ${{ env.USE_UV_VERSION }}
 
       - name: Download dist artifact
         uses: actions/download-artifact@v4
@@ -174,7 +175,7 @@ jobs:
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: "0.10.12"
+          version: ${{ env.USE_UV_VERSION }}
 
       - name: Install Python
         working-directory: ${{ github.workspace }}/python
