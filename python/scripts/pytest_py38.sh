@@ -3,7 +3,7 @@
 # Set any pipeline to return the last non-zero status
 # so that we can capture an error in uv run pytest
 # even after piping its stdout into tee
-set -o pipefail
+set -uo pipefail
 
 # Run in repo's python/ directory
 cd "${GITHUB_WORKSPACE}/python/"
