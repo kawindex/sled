@@ -66,7 +66,7 @@ jobs:
           - "3.13"
           - "3.14"
         distribution-suffix:
-          - '.whl'
+          - '-py3-none-any.whl'
           - '.tar.gz'
     env:
       UV_PYTHON: ${{ matrix.python-version }}
