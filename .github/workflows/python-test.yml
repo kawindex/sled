@@ -31,7 +31,7 @@ jobs:
             testdata/
 
       - name: Log commit SHA
-        run: 'echo "commit SHA: $GITHUB_SHA"'
+        run: 'echo "commit SHA: ${GITHUB_SHA}"'
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
@@ -54,7 +54,7 @@ jobs:
           uv run pytest
           --cov=parsled
           --cov-report=term-missing
-          --cov-report=markdown-append:$GITHUB_STEP_SUMMARY
+          --cov-report="markdown-append:${GITHUB_STEP_SUMMARY}"
           tests/
 
       - name: Run pytest py38

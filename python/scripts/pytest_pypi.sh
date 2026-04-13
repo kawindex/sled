@@ -6,7 +6,7 @@
 set -o pipefail
 
 # Run in repo's python/ directory
-cd ${GITHUB_WORKSPACE}/python/
+cd "${GITHUB_WORKSPACE}/python/"
 
 # --cov-report=markdown-append only appends the coverage report.
 # When testing the distribution, we are more concerned with
@@ -14,7 +14,7 @@ cd ${GITHUB_WORKSPACE}/python/
 # we take the terminal output and manually append it
 # to $GITHUB_STEP_SUMMARY
 
-echo '```' >> ${GITHUB_STEP_SUMMARY}
+echo '```' >> "${GITHUB_STEP_SUMMARY}"
 
 uv run \
   --isolated \
@@ -26,11 +26,11 @@ uv run \
   pytest \
     --cov=parsled \
     --cov-report=term-missing \
-    ${GITHUB_WORKSPACE}/python/tests/ \
-| tee --append ${GITHUB_STEP_SUMMARY}
+    "${GITHUB_WORKSPACE}/python/tests/" \
+| tee --append "${GITHUB_STEP_SUMMARY}"
 
-TEST_EXIT_CODE=${?}
+TEST_EXIT_CODE="${?}"
 
-echo '```' >> ${GITHUB_STEP_SUMMARY}
+echo '```' >> "${GITHUB_STEP_SUMMARY}"
 
-exit ${TEST_EXIT_CODE}
+exit "${TEST_EXIT_CODE}"
