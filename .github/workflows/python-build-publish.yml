@@ -89,6 +89,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           version: ${{ env.USE_UV_VERSION }}
+          python-version: ${{ matrix.python-version }}
 
       - name: Install Python
         working-directory: ${{ github.workspace }}/python
@@ -173,6 +174,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           version: ${{ env.USE_UV_VERSION }}
+          python-version: ${{ matrix.python-version }}
 
       - name: Install Python
         working-directory: ${{ github.workspace }}/python
