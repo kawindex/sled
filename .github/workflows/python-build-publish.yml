@@ -137,7 +137,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: parsled-dist
-          path: ${{ github.workspace }}/python/dist
+
+      - name: Debug
+        run: 'ls && ls dist/'
 
       - name: Publish to PyPI
         run: uv publish --publish-url "https://test.pypi.org/legacy/" --check-url "https://test.pypi.org/simple/"
