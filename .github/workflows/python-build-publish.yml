@@ -59,13 +59,13 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - "3.8"
-          - "3.9"
-          - "3.10"
-          - "3.11"
-          - "3.12"
-          - "3.13"
-          - "3.14"
+          - '3.8'
+          - '3.9'
+          - '3.10'
+          - '3.11'
+          - '3.12'
+          - '3.13'
+          - '3.14'
         distribution-suffix:
           - '-py3-none-any.whl'
           - '.tar.gz'
@@ -147,13 +147,13 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - "3.8"
-          - "3.9"
-          - "3.10"
-          - "3.11"
-          - "3.12"
-          - "3.13"
-          - "3.14"
+          - '3.8'
+          - '3.9'
+          - '3.10'
+          - '3.11'
+          - '3.12'
+          - '3.13'
+          - '3.14'
         distribution-suffix:
           - '.whl'
           - '.tar.gz'
