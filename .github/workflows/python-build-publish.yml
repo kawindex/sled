@@ -140,7 +140,7 @@ jobs:
         run: uv publish
 
   python-test-pypi:
-    name: Python ${{ matrix.python-version }} test ${{ matrix.distribution-suffix }} distribution from PyPI
+    name: Python ${{ matrix.python-version }} test distribution from PyPI
     needs: python-publish
     runs-on: ubuntu-latest
     strategy:
@@ -154,9 +154,6 @@ jobs:
           - '3.12'
           - '3.13'
           - '3.14'
-        distribution-suffix:
-          - '.whl'
-          - '.tar.gz'
     env:
       UV_PYTHON: ${{ matrix.python-version }}
 
