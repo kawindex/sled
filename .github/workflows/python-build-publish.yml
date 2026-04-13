@@ -133,6 +133,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: parsled-dist
+          path: ${{ github.workspace }}/python/dist
 
       - name: Publish to PyPI
         run: uv publish
