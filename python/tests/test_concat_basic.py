@@ -53,6 +53,16 @@ class TestConcat:
                 "cupidatat non proident, sunt in culpa qui officia deserunt "
                 "mollit anim id est laborum."
             ),
+            "Linem ipsum": (
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit,\nsed do "
+                "eiusmod tempor incididunt ut labore et dolore magna aliqua.\n"
+                "Ut enim ad minim veniam, quis nostrud exercitation ullamco "
+                "laboris\r\nnisi ut aliquip ex ea commodo consequat. Duis aute "
+                "irure dolor in\r\nreprehenderit in voluptate velit esse cillum "
+                "dolore eu fugiat nulla pariatur.\nExcepteur sint occaecat "
+                "cupidatat non proident,\rsunt in culpa qui officia deserunt "
+                "mollit anim id est laborum.\n\r"
+            ),
         }
 
     def test_parse(
@@ -64,7 +74,6 @@ class TestConcat:
     def test_round_trip(
         self, expected_data: Dict[str, parsled.Entity]
     ) -> None:
-        # This probably doesn't actually serialize to `concat` though.
         sled_text = parsled.to_sled(expected_data)
         round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data
@@ -77,12 +86,13 @@ class TestConcat:
         round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data
 
-    def test_round_trip(
+    def test_round_trip_serializer(
         self,
         each_sled_serializer,
         expected_data: Dict[str, parsled.Entity],
     ) -> None:
-        # This probably doesn't actually serialize to `concat` though.
+        # `SledSerializerMini` and `SledSerializerBasic` don't actually
+        # serialize to `concat` though.
         sled_text = each_sled_serializer.to_sled(expected_data)
         round_trip_data = parsled.from_sled(sled_text)
         assert expected_data == round_trip_data
