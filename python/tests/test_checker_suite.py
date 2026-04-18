@@ -5,7 +5,7 @@ https://json.org/JSON_checker/
 
 import json
 from pathlib import Path
-from typing import Dict, NamedTuple
+from typing import Any, Dict, Mapping, NamedTuple
 
 import pytest
 
@@ -82,6 +82,53 @@ class TestCheckerSuiteP01:
         sled_text = each_sled_serializer.to_sled(expected_dict)
         round_trip_dict = parsled.from_sled(sled_text)
         assert expected_dict == round_trip_dict
+
+    def test_round_trip_with_ser_kwargs(
+        self,
+        expected_dict: Dict[str, parsled.Entity],
+        sled_serializer_kwargs: Mapping[str, Any],
+    ) -> None:
+        sled_text = parsled.to_sled(expected_dict, **sled_serializer_kwargs)
+        round_trip_data = parsled.from_sled(sled_text)
+        assert expected_dict == round_trip_data
+
+    def test_round_trip_mini_with_ser_kwargs(
+        self,
+        expected_dict: Dict[str, parsled.Entity],
+        sled_serializer_mini_kwargs: Mapping[str, Any],
+    ) -> None:
+        sled_text = parsled.to_sled_mini(
+            expected_dict, **sled_serializer_mini_kwargs
+        )
+        round_trip_data = parsled.from_sled(sled_text)
+        assert expected_dict == round_trip_data
+
+    def test_round_trip_serializer_with_kwargs(
+        self,
+        sled_serializer_with_kwargs: parsled.SledSerializer,
+        expected_dict: Dict[str, parsled.Entity],
+    ) -> None:
+        sled_text = sled_serializer_with_kwargs.to_sled(expected_dict)
+        round_trip_data = parsled.from_sled(sled_text)
+        assert expected_dict == round_trip_data
+
+    def test_round_trip_serializer_mini_with_kwargs(
+        self,
+        sled_serializer_mini_with_kwargs: parsled.SledSerializerMini,
+        expected_dict: Dict[str, parsled.Entity],
+    ) -> None:
+        sled_text = sled_serializer_mini_with_kwargs.to_sled(expected_dict)
+        round_trip_data = parsled.from_sled(sled_text)
+        assert expected_dict == round_trip_data
+
+    def test_round_trip_serializer_basic_with_kwargs(
+        self,
+        sled_serializer_basic_with_kwargs: parsled._serializer_basic.SledSerializerBasic,
+        expected_dict: Dict[str, parsled.Entity],
+    ) -> None:
+        sled_text = sled_serializer_basic_with_kwargs.to_sled(expected_dict)
+        round_trip_data = parsled.from_sled(sled_text)
+        assert expected_dict == round_trip_data
 
 
 # Invalid Sled
