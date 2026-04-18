@@ -76,7 +76,7 @@ class TestLargeFloat:
     @pytest.fixture(scope="class")
     def expected_parse_data(
         self, data_value_positive: float, data_value_negative: float
-    ) -> Dict[str, Any]:
+    ) -> Dict[str, Dict[str, Dict[str, Dict[str, Any]]]]:
         by_sign = {
             "implicit-positive": pytest.approx(data_value_positive),
             "explicit-positive": pytest.approx(data_value_positive),
@@ -99,7 +99,7 @@ class TestLargeFloat:
     def test_parse(
         self,
         sled_text: str,
-        expected_parse_data: Dict[str, Any],
+        expected_parse_data: Dict[str, Dict[str, Dict[str, Dict[str, Any]]]],
     ) -> None:
         actual_data = parsled.from_sled(sled_text)
         assert expected_parse_data == actual_data
@@ -119,39 +119,28 @@ class TestLargeFloat:
             "n": data_value_negative,
         }
 
-    @pytest.fixture(scope="class")
-    def round_trip_expected_data(
-        self, round_trip_input_data: Dict[str, float]
-    ) -> Dict[str, Any]:
-        return {k: pytest.approx(v) for k, v in round_trip_input_data.items()}
-
     def test_round_trip(
-        self,
-        round_trip_input_data: Dict[str, float],
-        round_trip_expected_data: Dict[str, Any],
+        self, round_trip_input_data: Dict[str, float]
     ) -> None:
         sled_text = parsled.to_sled(round_trip_input_data)
         round_trip_data = parsled.from_sled(sled_text)
-        assert round_trip_expected_data == round_trip_data
+        assert pytest.approx(round_trip_input_data) == round_trip_data
 
     def test_round_trip_mini(
-        self,
-        round_trip_input_data: Dict[str, float],
-        round_trip_expected_data: Dict[str, Any],
+        self, round_trip_input_data: Dict[str, float]
     ) -> None:
         sled_text = parsled.to_sled_mini(round_trip_input_data)
         round_trip_data = parsled.from_sled(sled_text)
-        assert round_trip_expected_data == round_trip_data
+        assert pytest.approx(round_trip_input_data) == round_trip_data
 
     def test_round_trip_serializer(
         self,
         each_sled_serializer,
         round_trip_input_data: Dict[str, float],
-        round_trip_expected_data: Dict[str, Any],
     ) -> None:
         sled_text = each_sled_serializer.to_sled(round_trip_input_data)
         round_trip_data = parsled.from_sled(sled_text)
-        assert round_trip_expected_data == round_trip_data
+        assert pytest.approx(round_trip_input_data) == round_trip_data
 
 
 class TestSmallFloat:
@@ -230,7 +219,7 @@ class TestSmallFloat:
         self,
         data_values_positive: Dict[str, Any],
         data_values_negative: Dict[str, Any],
-    ) -> Dict[str, Dict[str, Any]]:
+    ) -> Dict[str, Dict[str, Dict[str, Dict[str, Any]]]]:
         by_sign = {
             "implicit-positive": data_values_positive,
             "explicit-positive": data_values_positive,
@@ -249,7 +238,7 @@ class TestSmallFloat:
     def test_parse(
         self,
         sled_text: str,
-        expected_parse_data: Dict[str, Any],
+        expected_parse_data: Dict[str, Dict[str, Dict[str, Dict[str, Any]]]],
     ) -> None:
         actual_data = parsled.from_sled(sled_text)
         assert expected_parse_data == actual_data

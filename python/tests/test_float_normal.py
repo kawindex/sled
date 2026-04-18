@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import pytest
 
@@ -44,9 +44,8 @@ class TestFloatNormal:
     @pytest.fixture(scope="class")
     def expected_dict(
         self, float_values: List[float], arbitrary_key: str
-    ) -> Dict[str, List[float]]:
-        approx_list = [pytest.approx(expected) for expected in float_values]
-        return {arbitrary_key: approx_list}
+    ) -> Dict[str, Any]:
+        return {arbitrary_key: pytest.approx(float_values)}
 
     @pytest.fixture(scope="class")
     def input_dict(
