@@ -1,4 +1,4 @@
-from typing import Any, Dict, NamedTuple
+from typing import Dict, NamedTuple
 import pytest
 
 import parsled
