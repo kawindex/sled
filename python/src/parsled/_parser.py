@@ -156,6 +156,11 @@ class Parser:
         This is the entry point to all of the internal parsing implementation.
         """
 
+        # For convenience, we accept and ignore leading ws before checking for
+        # a top level opening brace. This is not part of the grammar
+        # but should be harmless when the input is already a `str`.
+        self._consume_optional_ws()
+
         has_top_level_braces = self._peek() == MAP_OPEN_MARK
         if has_top_level_braces:
             self._advance()
@@ -167,11 +172,18 @@ class Parser:
             # Validate and consume close brace
             if self._peek() == MAP_CLOSE_MARK:
                 self._advance()
+
+                # For convenience, we accept and ignore trailing ws after
+                # the top level closing brace. This is not part of the grammar
+                # but should be harmless when the input is already a `str`.
+                self._consume_optional_ws()
+
             elif self._is_at_end():
                 raise self._make_invalid_sled_error(
                     "Reached end of input without finding "
                     f"'{MAP_CLOSE_MARK}' to close top-level map."
                 )
+
             else:
                 raise self._make_invalid_sled_error(
                     f"Expected '{MAP_CLOSE_MARK}' to close top-level map "
