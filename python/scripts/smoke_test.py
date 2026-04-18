@@ -1,3 +1,5 @@
+"""Script that runs some broad tests without any external dev dependency."""
+
 import json
 from pathlib import Path
 from typing import Dict
