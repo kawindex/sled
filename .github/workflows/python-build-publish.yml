@@ -43,7 +43,7 @@ jobs:
 
       - name: Build distributions using uv
         working-directory: ${{ github.workspace }}/python
-        run: uv build
+        run: uv build --verbose
 
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
