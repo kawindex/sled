@@ -8,10 +8,8 @@ import parsled
 
 
 TEST_DATA_DIR = Path(__file__).parent.parent.parent.joinpath("testdata")
-CORE_TEST_DATA_DIR = TEST_DATA_DIR.joinpath("core")
+
 DEMO_DATA_DIR = TEST_DATA_DIR.joinpath("demo")
-
-
 REPO_README_TEST_SLED_PATH = DEMO_DATA_DIR.joinpath("repo-readme.sd")
 REPO_README_DEMO_EXPECTED_DATA = {
     "my_string": "use quotes if you have spaces or other special cases",
@@ -77,19 +75,19 @@ if __name__ == "__main__":
 
     # repo readme demo
     test_parse(
-        sled_text=REPO_README_TEST_SLED_PATH.read_text(encoding="utf-8").strip(),
+        sled_text=REPO_README_TEST_SLED_PATH.read_text(encoding="utf-8"),
         expected_data=REPO_README_DEMO_EXPECTED_DATA,
     )
     test_round_trip(REPO_README_DEMO_EXPECTED_DATA)
     test_round_trip_mini(REPO_README_DEMO_EXPECTED_DATA)
 
     # checker suite p01
-    checker_suite_p01_json_text = CHECKER_SUITE_P01_JSON_PATH.read_text().strip()
+    checker_suite_p01_json_text = CHECKER_SUITE_P01_JSON_PATH.read_text()
     checker_suite_p01_expected_dict = {
         "content": json.loads(checker_suite_p01_json_text)
     }
     test_parse(
-        sled_text=CHECKER_SUITE_P01_SLED_PATH.read_text().strip(),
+        sled_text=CHECKER_SUITE_P01_SLED_PATH.read_text(),
         expected_data=checker_suite_p01_expected_dict,
     )
     test_round_trip(checker_suite_p01_expected_dict)
