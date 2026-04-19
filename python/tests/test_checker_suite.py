@@ -34,7 +34,7 @@ class TestCheckerSuiteP01:
 
     @pytest.fixture(scope="class")
     def json_text(self, json_path: Path) -> str:
-        return json_path.read_text().strip()
+        return json_path.read_text()
 
     @pytest.fixture(scope="class")
     def json_data(self, json_text: Path) -> list:
@@ -58,7 +58,7 @@ class TestCheckerSuiteP01:
 
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text().strip()
+        return sled_path.read_text()
 
     def test_parse(
         self, sled_text: str, expected_dict: Dict[str, list]
@@ -212,7 +212,7 @@ class TestCheckerSuiteInvalid:
 
     @pytest.fixture(scope="class")
     def invalid_sled_text(self, invalid_sled_path: Path) -> str:
-        return invalid_sled_path.read_text().strip()
+        return invalid_sled_path.read_text()
 
     @pytest.fixture(scope="class")
     def control_sled_dir(self, checker_suite_data_dir: Path) -> Path:
@@ -228,7 +228,7 @@ class TestCheckerSuiteInvalid:
 
     @pytest.fixture(scope="class")
     def control_sled_text(self, control_sled_path: Path) -> str:
-        return control_sled_path.read_text().strip()
+        return control_sled_path.read_text()
 
     def test_parse_invalid(self, invalid_sled_text: str) -> None:
         with pytest.raises(parsled.SledError) as excinfo:
@@ -346,7 +346,7 @@ class TestCheckerSuiteValid:
 
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text().strip()
+        return sled_path.read_text()
 
     def test_parse(
         self, valid_test_case: CheckerSuiteTestCase, sled_text: str

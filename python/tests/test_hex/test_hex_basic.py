@@ -13,7 +13,7 @@ class TestHexBasic:
 
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text().strip()
+        return sled_path.read_text()
 
     @pytest.fixture(scope="class")
     def expected_data(self) -> Dict[str, bytes]:

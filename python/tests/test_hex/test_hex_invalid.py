@@ -17,7 +17,7 @@ class TestHexInvalid:
 
     @pytest.fixture(scope="class")
     def partial_byte_sled_text(self, partial_byte_sled_path: Path) -> str:
-        return partial_byte_sled_path.read_text().strip()
+        return partial_byte_sled_path.read_text()
 
     @pytest.fixture(scope="class")
     def control_sled_path(self, hex_invalid_data_dir: Path) -> Path:
@@ -25,7 +25,7 @@ class TestHexInvalid:
 
     @pytest.fixture(scope="class")
     def control_sled_text(self, control_sled_path: Path) -> str:
-        return control_sled_path.read_text().strip()
+        return control_sled_path.read_text()
 
     @pytest.fixture(scope="class")
     def expected_data(self) -> Dict[str, bytes]:

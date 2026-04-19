@@ -17,7 +17,7 @@ class TestIntegerValue:
 
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text().strip()
+        return sled_path.read_text()
     
     @pytest.fixture(scope="class")
     def expected_dict(self, arbitrary_key: str) -> Dict[str, List[int]]:

@@ -113,7 +113,7 @@ class TestImapDup:
 
     @pytest.fixture(scope="class")
     def invalid_sled_text(self, invalid_sled_path: Path) -> str:
-        return invalid_sled_path.read_text().strip()
+        return invalid_sled_path.read_text()
 
     def test_parse_invalid(self, invalid_sled_text: str) -> None:
         with pytest.raises(parsled.SledError) as excinfo:
@@ -128,7 +128,7 @@ class TestImapDup:
 
     @pytest.fixture(scope="class")
     def control_sled_text(self, control_sled_path: Path) -> str:
-        return control_sled_path.read_text().strip()
+        return control_sled_path.read_text()
 
     @pytest.fixture(scope="class")
     def control_expected_dict(

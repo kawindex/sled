@@ -22,7 +22,7 @@ class TestIntegerRangeKey:
 
     @pytest.fixture(scope="class")
     def overflow_sled_text(self, overflow_sled_path: Path) -> str:
-        return overflow_sled_path.read_text().strip()
+        return overflow_sled_path.read_text()
 
     def test_overflow(self, overflow_sled_text: str) -> None:
         with pytest.raises(parsled.SledError) as excinfo:
@@ -35,7 +35,7 @@ class TestIntegerRangeKey:
 
     @pytest.fixture(scope="class")
     def control_sled_text(self, control_sled_path: Path) -> str:
-        return control_sled_path.read_text().strip()
+        return control_sled_path.read_text()
 
     @pytest.fixture(scope="class")
     def control_expected_dict(self) -> Dict[str, Dict[int, str]]:
@@ -104,7 +104,7 @@ class TestIntegerRangeValue:
 
     @pytest.fixture(scope="class")
     def overflow_sled_text(self, overflow_sled_path: Path) -> str:
-        return overflow_sled_path.read_text().strip()
+        return overflow_sled_path.read_text()
 
     def test_overflow(self, overflow_sled_text: str) -> None:
         with pytest.raises(parsled.SledError) as excinfo:
@@ -117,7 +117,7 @@ class TestIntegerRangeValue:
 
     @pytest.fixture(scope="class")
     def control_sled_text(self, control_sled_path: Path) -> str:
-        return control_sled_path.read_text().strip()
+        return control_sled_path.read_text()
 
     @pytest.fixture(scope="class")
     def control_expected_data(self) -> Dict[str, int]:
