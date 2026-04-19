@@ -23,4 +23,4 @@ class ParseSnapshot(NamedTuple):
     end_index: int
     line_start: int
     line_num: int
-    sled_type: Optional[SledType] = None,
+    sled_type: Optional[SledType] = None
