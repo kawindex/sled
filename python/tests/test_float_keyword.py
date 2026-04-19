@@ -38,7 +38,7 @@ class TestFloatKeywordInvalid:
 
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text().strip()
+        return sled_path.read_text()
 
     def test_parse_invalid(self, sled_text: str) -> None:
         with pytest.raises(parsled.SledError) as excinfo:
@@ -53,7 +53,7 @@ class TestFloatKeywordValid:
 
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text().strip()
+        return sled_path.read_text()
 
     def test_parse_valid(self, sled_text: str) -> None:
         d = parsled.from_sled(sled_text)

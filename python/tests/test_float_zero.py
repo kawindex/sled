@@ -16,7 +16,7 @@ class TestFloatZero:
 
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text().strip()
+        return sled_path.read_text()
 
     def test_parser(self, sled_text: str, arbitrary_key: str) -> None:
         actual_dict = parsled.from_sled(sled_text)

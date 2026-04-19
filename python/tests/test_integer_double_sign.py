@@ -38,7 +38,7 @@ class TestIntegerDoubleSignInvalidValue:
     
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text().strip()
+        return sled_path.read_text()
 
     def test_parse(self, sled_text: str) -> None:
         with pytest.raises(parsled.SledError) as excinfo:
@@ -53,7 +53,7 @@ class TestIntegerDoubleSignValidValue:
     
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text().strip()
+        return sled_path.read_text()
 
     @pytest.fixture(scope="class")
     def expected_data(self) -> Dict[str, int]:
@@ -97,7 +97,7 @@ class TestIntegerDoubleSignInvalidKey:
     
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text().strip()
+        return sled_path.read_text()
 
     def test_parse(self, sled_text: str) -> None:
         with pytest.raises(parsled.SledError) as excinfo:
@@ -112,7 +112,7 @@ class TestIntegerDoubleSignValidKey:
     
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text().strip()
+        return sled_path.read_text()
 
     @pytest.fixture(scope="class")
     def expected_data(self) -> Dict[str, Dict[int, str]]:

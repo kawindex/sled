@@ -84,7 +84,7 @@ class TestDemo:
 
     @pytest.fixture(scope="class")
     def sled_text(self, sled_path: Path) -> str:
-        return sled_path.read_text(encoding="utf-8").strip()
+        return sled_path.read_text(encoding="utf-8")
 
     @pytest.fixture(scope="class")
     def expected_data(
