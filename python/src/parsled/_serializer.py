@@ -52,10 +52,10 @@ from parsled.spec import (
     HEX_KEYWORD_NAME,
     HEX_OPEN_MARK,
     KEYWORD_MARK,
-    LineSeparator,
     DecimalMarkType,
     ExponentPrefixType,
-    QuoteMarkType
+    LineSeparator,
+    QuoteMarkType,
 )
 
 
@@ -280,14 +280,10 @@ class SledSerializer(SledSerializerBasic):
 
         # `hex`
         self._hex_horizontal_separator: HexHorizontalSeparator = (
-            ""
-            if hex_bytes_per_separator == 0
-            else hex_horizontal_separator
+            "" if hex_bytes_per_separator == 0 else hex_horizontal_separator
         )
         self._hex_bytes_per_separator = (
-            0
-            if hex_horizontal_separator == ""
-            else hex_bytes_per_separator
+            0 if hex_horizontal_separator == "" else hex_bytes_per_separator
         )
         if hex_line_length != 0 and hex_line_length < (
             abs(self._hex_bytes_per_separator) * HEX_DIGITS_PER_BYTE
@@ -316,9 +312,7 @@ class SledSerializer(SledSerializerBasic):
             )
 
         # Fold into lines
-        lines = self._fold_hex_lines(
-            content, self._hex_bytes_per_separator
-        )
+        lines = self._fold_hex_lines(content, self._hex_bytes_per_separator)
         last_line_separator = f"{self._line_separator}{indent}"
         line_separator = f"{last_line_separator}{self._indent}"
         joined_lines = "".join(f"{line_separator}{line}" for line in lines)
@@ -369,7 +363,7 @@ class SledSerializer(SledSerializerBasic):
             line_length_in_content = line_length + separator_length
 
         return [
-            hex_content[line_start_index:line_start_index+line_length]
+            hex_content[line_start_index : line_start_index + line_length]
             for line_start_index in range(
                 0, len(hex_content), line_length_in_content
             )

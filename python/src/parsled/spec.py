@@ -157,23 +157,27 @@ UNICODE_ESCAPE_OPEN_SEQUENCE = (
     f"{ESCAPE_CHARACTER}{UNICODE_ESCAPE_KEY}{UNICODE_ESCAPE_OPEN_MARK}"
 )
 
-SIMPLE_ESCAPE_EVALUATION: Mapping[str, str] = MappingProxyType({
-    ESCAPE_CHARACTER: ESCAPE_CHARACTER,
-    DOUBLE_QUOTE_MARK: DOUBLE_QUOTE_MARK,
-    SINGLE_QUOTE_MARK: SINGLE_QUOTE_MARK,
-    "n": LF_LINE_SEPARATOR,
-    "r": CR_LINE_SEPARATOR,
-    "t": TAB_CHARACTER,
-})
+SIMPLE_ESCAPE_EVALUATION: Mapping[str, str] = MappingProxyType(
+    {
+        ESCAPE_CHARACTER: ESCAPE_CHARACTER,
+        DOUBLE_QUOTE_MARK: DOUBLE_QUOTE_MARK,
+        SINGLE_QUOTE_MARK: SINGLE_QUOTE_MARK,
+        "n": LF_LINE_SEPARATOR,
+        "r": CR_LINE_SEPARATOR,
+        "t": TAB_CHARACTER,
+    }
+)
 """
 Evaluation for each escape sequence that denotes a single particular value
 (all escape sequences except for Unicode).
 """
 
-SIMPLE_ESCAPE_SEQUENCES: Mapping[str, str] = MappingProxyType({
-    v: f"{ESCAPE_CHARACTER}{k}"
-    for k, v in SIMPLE_ESCAPE_EVALUATION.items()
-})
+SIMPLE_ESCAPE_SEQUENCES: Mapping[str, str] = MappingProxyType(
+    {
+        v: f"{ESCAPE_CHARACTER}{k}"
+        for k, v in SIMPLE_ESCAPE_EVALUATION.items()
+    }
+)
 """
 Each escape sequence that denotes a single particular value
 (all escape sequences except for Unicode).
@@ -183,11 +187,13 @@ ESCAPE_CHARACTER_ESCAPE = SIMPLE_ESCAPE_SEQUENCES[ESCAPE_CHARACTER]
 LF_LINE_SEPARATOR_ESCAPE = SIMPLE_ESCAPE_SEQUENCES[LF_LINE_SEPARATOR]
 CR_LINE_SEPARATOR_ESCAPE = SIMPLE_ESCAPE_SEQUENCES[CR_LINE_SEPARATOR]
 
-LINE_SEPARATOR_ESCAPES: Mapping[LineSeparator, str] = MappingProxyType({
-    LF_LINE_SEPARATOR: LF_LINE_SEPARATOR_ESCAPE,
-    CR_LINE_SEPARATOR: CR_LINE_SEPARATOR_ESCAPE,
-    CRLF_LINE_SEPARATOR: f"{CR_LINE_SEPARATOR_ESCAPE}{LF_LINE_SEPARATOR_ESCAPE}",
-})
+LINE_SEPARATOR_ESCAPES: Mapping[LineSeparator, str] = MappingProxyType(
+    {
+        LF_LINE_SEPARATOR: LF_LINE_SEPARATOR_ESCAPE,
+        CR_LINE_SEPARATOR: CR_LINE_SEPARATOR_ESCAPE,
+        CRLF_LINE_SEPARATOR: f"{CR_LINE_SEPARATOR_ESCAPE}{LF_LINE_SEPARATOR_ESCAPE}",
+    }
+)
 
 C0_SIMPLE_ESCAPE_SET = frozenset(
     (LF_LINE_SEPARATOR, CR_LINE_SEPARATOR, TAB_CHARACTER)

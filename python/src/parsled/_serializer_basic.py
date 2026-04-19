@@ -42,7 +42,7 @@ from parsled.spec import (
     DecimalMarkType,
     ExponentPrefixType,
     LineSeparator,
-    QuoteMarkType
+    QuoteMarkType,
 )
 
 
@@ -129,9 +129,7 @@ class SledSerializerBasic:
         # line separator
         self._line_separator = line_separator
         try:
-            self._line_separator_escape = (
-                LINE_SEPARATOR_ESCAPES[line_separator]
-            )
+            self._line_separator_escape = LINE_SEPARATOR_ESCAPES[line_separator]
         except KeyError as ke:
             ve = ValueError(f"line separator not recognized: {line_separator}")
             raise ve from ke
@@ -254,9 +252,7 @@ class SledSerializerBasic:
             )
 
     def _unwrap(self, obj: object) -> object:
-        bound_method = getattr(
-            obj, SLED_CUSTOM_SERIALIZATION_METHOD_NAME, None
-        )
+        bound_method = getattr(obj, SLED_CUSTOM_SERIALIZATION_METHOD_NAME, None)
         if bound_method is None:
             return obj
 
@@ -438,8 +434,8 @@ class SledSerializerBasic:
         """Validate that the input `n` lies within the allowed range."""
         if n < SLED_INTEGER_MIN or SLED_INTEGER_MAX < n:
             reason = (
-                "Value cannot be represented by a Sled integer "
-                f"(overflow): {n}"
+                "Value cannot be represented "
+                f"by a Sled integer (overflow): {n}"
             )
             raise SledError(
                 error_message=reason,
@@ -508,9 +504,7 @@ class SledSerializerBasic:
         content = s.replace(ESCAPE_CHARACTER, ESCAPE_CHARACTER_ESCAPE)
 
         # Escape the relevant quote mark
-        content = content.replace(
-            self._quote_mark, self._quote_mark_escape
-        )
+        content = content.replace(self._quote_mark, self._quote_mark_escape)
 
         # Escape any remaining reserved chars with special escape sequences
         for c in C0_SIMPLE_ESCAPE_SET.intersection(content):

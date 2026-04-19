@@ -309,8 +309,8 @@ class Parser:
             error_category=error_category,
             line=self._get_range(line_start, line_end),
             line_num=line_num,
-            start_index=start_index-line_start,
-            end_index=end_index-line_start,
+            start_index=start_index - line_start,
+            end_index=end_index - line_start,
         )
 
     def _find_line_end(self, start_index: int) -> int:
@@ -346,8 +346,8 @@ class Parser:
         )
 
     def _multi_line_consume_optional(
-            self, horizontal_set: Container[str]
-        ) -> str:
+        self, horizontal_set: Container[str]
+    ) -> str:
         """
         Consumes and returns line separators (including comments),
         in addition to any element(s) in the given `horizontal_set`.
@@ -476,7 +476,7 @@ class Parser:
     ) -> Union[Dict[str, Entity], Dict[int, Entity]]:
         """
         Parses key-value pairs. Checks for duplicate keys
-        (after evaluation of each key as a Python `object`). 
+        (after evaluation of each key as a Python `object`).
         """
 
         start_index_within_line = self._index - self._line_start
@@ -746,7 +746,8 @@ class Parser:
             segment_start_index = self._index
             while self._next() in HEX_DIGIT_HORIZONTAL_SET:
                 pass
-            content_list.append(self._get_range(segment_start_index, self._index))
+            segment_str = self._get_range(segment_start_index, self._index)
+            content_list.append(segment_str)
 
         content_str = "".join(content_list)
 
@@ -869,7 +870,7 @@ class Parser:
                 raise self._make_invalid_sled_error(
                     reason=_INVALID_NUMBER_COEFFICIENT_ERROR_REASON,
                     start_index=coefficient_start_index,
-                    end_index=max(self._index, coefficient_start_index+1),
+                    end_index=max(self._index, coefficient_start_index + 1),
                 )
             if c in EXPONENT_PREFIX_SET:
                 # `float`: no decimal, has exponent
@@ -924,7 +925,10 @@ class Parser:
         raw_mantissa_str = self._consume_optional_digits()
         standardized_mantissa_str = remove_digit_separator(raw_mantissa_str)
 
-        if len(standardized_integral_str) == 0 and len(standardized_mantissa_str) == 0:
+        if (
+            len(standardized_integral_str) == 0
+            and len(standardized_mantissa_str) == 0
+        ):
             raise self._make_invalid_sled_error(
                 reason=_INVALID_NUMBER_COEFFICIENT_ERROR_REASON,
                 start_index=coefficient_start_index,
@@ -1188,9 +1192,7 @@ class Parser:
                     f"but found {repr(self._peek())}."
                 )
 
-        code_point_str = self._get_range(
-            content_start_index, content_end_index
-        )
+        code_point_str = self._get_range(content_start_index, content_end_index)
         if not HEX_DIGIT_WITH_SEPARATOR_SET.issuperset(code_point_str):
             # Report first point of failure
             while self._next() in HEX_DIGIT_WITH_SEPARATOR_SET:

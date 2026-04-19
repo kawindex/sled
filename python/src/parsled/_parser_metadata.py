@@ -19,6 +19,7 @@ class SledType(Enum):
 
 class ParseSnapshot(NamedTuple):
     """Metadata from parsing"""
+
     start_index: int
     end_index: int
     line_start: int

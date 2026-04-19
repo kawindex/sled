@@ -4,7 +4,6 @@ Python package for parsing Sled and serializing Python objects as Sled.
 Sled is a serialization language for developer-friendly reading and writing.
 """
 
-
 import parsled._check_sys_float_range as _
 
 from parsled._sled_error import SledError, SledErrorCategory

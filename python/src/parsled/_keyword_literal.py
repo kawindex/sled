@@ -28,7 +28,9 @@ class KeywordLiteral(Enum):
     NIL = KeywordLiteralSpec("nil", None)
 
 
-KEYWORD_LITERALS: Mapping[str, KeywordLiteralSpec] = MappingProxyType({
-    keyword_literal.value.name: keyword_literal.value
-    for keyword_literal in KeywordLiteral.__members__.values()
-})
+KEYWORD_LITERALS: Mapping[str, KeywordLiteralSpec] = MappingProxyType(
+    {
+        keyword_literal.value.name: keyword_literal.value
+        for keyword_literal in KeywordLiteral.__members__.values()
+    }
+)

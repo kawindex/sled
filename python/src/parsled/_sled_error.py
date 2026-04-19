@@ -103,7 +103,7 @@ class SledError(Exception):
                 unlike (probably) every other index in this package,
                 hence 'line_num' instead of 'line_index'.
             start_index:
-                Start index (0-indexed within `line`, inclusive) 
+                Start index (0-indexed within `line`, inclusive)
                 of the part identified as invalid.
             end_index:
                 End index (0-indexed within `line`, exclusive)
@@ -137,9 +137,7 @@ class SledError(Exception):
         if MAX_ERROR_CONTEXT_LEN < len_before_invalid:
             truncate_index = len_before_invalid - MAX_ERROR_CONTEXT_LEN
             line = f"{ERROR_ELLIPSIS}{line[truncate_index:]}"
-            len_before_invalid = (
-                MAX_ERROR_CONTEXT_LEN + len(ERROR_ELLIPSIS)
-            )
+            len_before_invalid = MAX_ERROR_CONTEXT_LEN + len(ERROR_ELLIPSIS)
 
         # Construct the error message
         error_message = (

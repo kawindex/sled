@@ -50,7 +50,7 @@ from parsled.spec import (
     MAP_CLOSE_MARK,
     DecimalMarkType,
     ExponentPrefixType,
-    QuoteMarkType
+    QuoteMarkType,
 )
 
 
