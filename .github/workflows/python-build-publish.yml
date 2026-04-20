@@ -191,6 +191,6 @@ jobs:
           --isolated
           --no-project
           --no-cache
-          --default-index "https://test.pypi.org/simple/"
+          --index "https://test.pypi.org/simple/"
           --with parsled
           "${GITHUB_WORKSPACE}/python/scripts/smoke_test.py"

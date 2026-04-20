@@ -20,6 +20,7 @@ uv run \
   --isolated \
   --no-project \
   --no-cache \
+  --index "https://test.pypi.org/simple/" \
   --with parsled \
   --with pytest \
   --with pytest-cov \
