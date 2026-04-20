@@ -5,6 +5,16 @@ Python package for parsing Sled and serializing Python objects as Sled.
 Sled is a serialization language for developer-friendly reading and writing.
 
 
+## Setup
+
+`parsled` is available on PyPI.
+You can install it using your preferred Python package manager.
+E.g.
+```sh
+pip install parsled
+```
+
+
 ## Parse: Sled to Python `dict`
 
 To parse Sled into a Python `dict`, call `from_sled()`.
