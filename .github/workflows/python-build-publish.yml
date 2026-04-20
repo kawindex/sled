@@ -121,8 +121,8 @@ jobs:
     needs: python-test-distribution
     runs-on: ubuntu-latest
     environment:
-      name: testpypi
-      url: https://test.pypi.org/p/parsled
+      name: pypi
+      url: https://pypi.org/p/parsled
     permissions:
       id-token: write
       contents: read
@@ -140,7 +140,7 @@ jobs:
           path: ${{ github.workspace }}/dist
 
       - name: Publish to PyPI
-        run: uv publish --publish-url "https://test.pypi.org/legacy/" --check-url "https://test.pypi.org/simple/"
+        run: uv publish
 
   python-test-from-pypi:
     name: Python ${{ matrix.python-version }} test distribution from PyPI
@@ -191,6 +191,5 @@ jobs:
           --isolated
           --no-project
           --no-cache
-          --default-index "https://test.pypi.org/simple/"
           --with parsled
           "${GITHUB_WORKSPACE}/python/scripts/smoke_test.py"
