@@ -140,7 +140,7 @@ jobs:
           path: ${{ github.workspace }}/dist
 
       - name: Publish to PyPI
-        run: uv publish
+        run: uv publish --verbose
 
   python-test-from-pypi:
     name: Python ${{ matrix.python-version }} test distribution from PyPI
