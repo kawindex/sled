@@ -256,7 +256,7 @@ class SledSerializerBasic:
         if bound_method is None:
             return obj
 
-        # Validate that it is callable
+        # Validate that it is callable.
         if not callable(bound_method):
             raise TypeError(
                 f"{type(obj).__name__}."
@@ -264,13 +264,19 @@ class SledSerializerBasic:
                 "must be callable."
             )
 
-        # Validate that it can be called without passing in any arguments
-        (
-            arg_names, _, _, arg_defaults, kwonlyargs, kwonlydefaults, _
-        ) = inspect.getfullargspec(bound_method)
+        # Validate that it can be called without passing in any arguments.
+        fas = inspect.getfullargspec(bound_method)
+        num_arg_defaults = 0 if fas.defaults is None else len(fas.defaults)
+        kw_only_arg_defaults_set = (
+            set() if fas.kwonlydefaults is None else set(fas.kwonlydefaults)
+        )
+
+        # fas.args includes `self`, even if it is bound, so fas.args can
+        # (and should) have 1 element more than fas.defaults for the
+        # (bound) method to be callable without passing in any arguments.
         if not (
-            len(arg_names) == len(arg_defaults)
-            and set(kwonlyargs) == set(kwonlydefaults)
+            (len(fas.args) - 1 == num_arg_defaults)
+            and (set(fas.kwonlyargs) == kw_only_arg_defaults_set)
         ):
             raise TypeError(
                 f"Must be able to call {type(obj).__name__}."
