@@ -1,7 +1,7 @@
 # Sled
 
-A format for representing data that developers will directly interact with, like config files.
-(Though with language models, who knows if humans will be doing this for much longer?)
+A JSON/YAML-like format for representing data that developers directly interact with, like config files.
+(Though with coding agents, who knows if humans will be doing this for much longer?)
 
 Sled is intended to be simple and convenient for a human (and maybe AI-augmented) developer to both read and write.
 
