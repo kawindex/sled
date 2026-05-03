@@ -265,23 +265,18 @@ class SledSerializerBasic:
             )
 
         # Validate that it can be called without passing in any arguments.
-        fas = inspect.getfullargspec(bound_method)
-        num_arg_defaults = 0 if fas.defaults is None else len(fas.defaults)
-        kw_only_arg_defaults_set = (
-            set() if fas.kwonlydefaults is None else set(fas.kwonlydefaults)
+        sig = inspect.signature(bound_method)
+        required_param_names = ", ".join(
+            name
+            for name, param in sig.parameters
+            if param.default != inspect.Parameter.empty
         )
-
-        # fas.args includes `self`, even if it is bound, so fas.args can
-        # (and should) have 1 element more than fas.defaults for the
-        # (bound) method to be callable without passing in any arguments.
-        if not (
-            (len(fas.args) - 1 == num_arg_defaults)
-            and (set(fas.kwonlyargs) == kw_only_arg_defaults_set)
-        ):
+        if len(required_param_names) != 0:
             raise TypeError(
                 f"Must be able to call {type(obj).__name__}."
                 f"{SLED_CUSTOM_SERIALIZATION_METHOD_NAME}() "
-                "without passing arguments."
+                "without passing arguments, but it required "
+                f"these arguments: {required_param_names}"
             )
 
         return self._unwrap(bound_method())
