@@ -13,7 +13,7 @@ Sled is intended to be simple and convenient for a human (and maybe AI-augmented
 
 ## Sled by example
 
-```sled
+```sled title="Sled"
 # This is a comment
 
 my_string = "use quotes if you have spaces or other special cases"

@@ -5,6 +5,7 @@
 ## Types
 
 `concrete` types:
+
 - `nil` (only `@nil`)
 - `boolean` (only `@true` and `@false`)
 - `integer` (int64)
@@ -16,6 +17,7 @@
   - `concat`
 
 `container` types:
+
 - `smap`
 - `imap`
 - `list`
@@ -43,6 +45,7 @@ of the Sled document.
 In particular, for a precise parser implementation, `@nil` must always evaluate to
 the same value, ideally a singleton, that is distinct from the evaluation of
 each of the following.
+
 - `@true`
 - `@false`
 - `0` (`integer` zero)
@@ -56,6 +59,7 @@ each of the following.
 ## `boolean` evaluation
 
 For a precise parser implementation, all of the following must apply.
+
 - `@true` must always evaluate to the same true boolean value.
 - `@false` must always evaluate to the same false boolean value.
 - Both of these should be distinguished boolean values
@@ -111,6 +115,7 @@ They must all evaluate to the same type.
 
 A `quote` uses the backslash (`\`) as its escape character.
 It may contain the following escape sequences, which are evaluated as follows.
+
 - `\\`: backslash (`\`)
 - `\"`: double quote (`"`)
 - `\'`: single quote (`'`)
@@ -157,6 +162,7 @@ rather cumbersome in the [formal grammar](/sled/grammar.md).
 Each definition is reproduced here in a more readable form.
 
 `identity_symbol` can (only) be any Unicode code point up to `10FFFF`, except for the following:
+
 - the 32 C0 control characters, along with `DEL` (this includes the tab and line separators)
 - the space
 - parentheses, square brackets, curly braces, angled brackets (`()[]{}<>`)
@@ -166,6 +172,7 @@ Each definition is reproduced here in a more readable form.
 - comment mark (`#`)
 
 `identity_start_symbol` can (only) be any `identity_symbol`, except for the following:
+
 - any digit (0-9)
 - underscore (`_`)
 - positive sign (`+`), negative sign (`-`)

@@ -1,5 +1,5 @@
 """
-Parse a Sled `document` into a Python `dict` by calling `from_sled`.
+To parse a `str` of Sled into a Python `dict`, call `from_sled()`.
 
 ```python
 sled_text = '''
@@ -8,13 +8,20 @@ age = 50
 children = [Jane ; Jimmy]
 '''
 
-data = from_sled(sled_text)
+data = parsled.from_sled(sled_text)
 
 assert data == {
     "name": "John Doe",
     "age": 50,
     "children": ["Jane", "Jimmy"],
 }
+```
+
+To parse a Sled file, read it to a `str`, then pass that into `from_sled()`.
+```python
+with open("path/to/my_file.sled", mode="r") as f:
+    sled_text = f.read()
+    data = parsled.from_sled(sled_text)
 ```
 """
 
