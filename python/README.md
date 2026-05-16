@@ -1,4 +1,4 @@
-# `parsled`
+# Parsled
 
 Python package for parsing Sled and serializing Python objects as Sled.
 
@@ -17,19 +17,36 @@ pip install parsled
 
 ## Parse: Sled to Python `dict`
 
-To parse Sled into a Python `dict`, call `from_sled()`.
+To parse a `str` of Sled into a Python `dict`, call `from_sled()`.
 
 ```python
-from parsled import from_sled
+sled_text = '''
+name = "John Doe"
+age = 50
+children = [Jack ; Jill]
+'''
 
+data = parsled.from_sled(sled_text)
+
+assert data == {
+    "name": "John Doe",
+    "age": 50,
+    "children": ["Jack", "Jill"],
+}
+```
+
+To parse a Sled file, read it to a `str`, then pass that into `from_sled()`.
+```python
 with open("path/to/my_file.sled", mode="r") as f:
-    data = from_sled(f.read())
+    sled_text = f.read()
+    data = parsled.from_sled(sled_text)
 ```
 
 
-## Serialize: Python to Sled
+## Serialize: Python `object` to Sled
 
-This package provides 2 ways to serialize Python objects.
+We have 2 ways to serialize Python objects.
+
 1. Call `to_sled()`.
 2. Instantiate a `SledSerializer` and call its `to_sled()` method.
 
@@ -41,39 +58,14 @@ Approach #2 may be useful if you want to set a configuration once
 and reuse that for serialization multiple times.
 
 ```python
-from parsled import SledSerializer, to_sled
-
 data = {}
 other_data = {}
 
 # Approach #1
-sled = to_sled(data)
+sled_output = parsled.to_sled(data)
 
 # Approach #2
-sled_serializer = SledSerializer()
-sled = sled_serializer.to_sled(data)
-other_sled = sled_serializer.to_sled(other_data)
+sled_serializer = parsled.SledSerializer()
+sled_output = sled_serializer.to_sled(data)
+other_sled_output = sled_serializer.to_sled(other_data)
 ```
-
-### Default serialization
-
-Instances of the following Python data types (on the left) will be serialized
-as the associated Sled data type (on the right).
-- `None`: `nil`
-- `bool`: `boolean`
-- `bytes`: `hex`
-- `int`: `integer`
-- `float`: `float`
-- `str`: `identity`, `quote`, or `concat`
-- `Mapping[str, Entity]`: `smap`
-- `Mapping[int, Entity]`: `imap`
-- `Iterable` that is not a `Mapping`: `list`
-- dataclass: `smap`
-
-For an object to be serialized as a standalone Sled document,
-it should be a `Mapping[str, Entity]` or dataclass instance,
-since the top level of a Sled document is always a `smap`.
-
-A dataclass instance is implicitly converted into a `Mapping`
-by calling `dataclasses.fields()` (unless the original instance is itself
-also a `Mapping`, in which case that takes precedence).

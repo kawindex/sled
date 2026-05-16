@@ -1,26 +1,25 @@
 """
-This module provides 2 ways to serialize Python objects.
+We have 2 ways to serialize Python objects.
+
 1. Call `to_sled()`.
 2. Instantiate a `SledSerializer` and call its `to_sled()` method.
 
 Both have the same configuration options and defaults.
-Refer to their documentation for details.
+For details, refer to the `SledSerializer` documentation.
 
 Approach #1 simply does approach #2 under the hood.
 Approach #2 may be useful if you want to set a configuration once
 and reuse that for serialization multiple times.
 
 ```python
-from parsled import SledSerializer, to_sled
-
 data = {}
 other_data = {}
 
 # Approach #1
-sled_output = to_sled(data)
+sled_output = parsled.to_sled(data)
 
 # Approach #2
-sled_serializer = SledSerializer()
+sled_serializer = parsled.SledSerializer()
 sled_output = sled_serializer.to_sled(data)
 other_sled_output = sled_serializer.to_sled(other_data)
 ```
@@ -106,7 +105,7 @@ def to_sled(
 
     This function has the same configuration options and defaults
     as `SledSerializer`.
-    For details, refer to the `SledSerializer` documentation.
+    For details, the `SledSerializer` documentation below.
 
     Example:
     ```python

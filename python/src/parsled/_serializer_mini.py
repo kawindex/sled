@@ -2,6 +2,7 @@
 Minified serialization for a more compact but less human-friendly output.
 
 The interface is analogous to `to_sled()` and `SledSerializer` respectively.
+
 1. Call `to_sled_mini()`.
 2. Instantiate a `SledSerializerMini` and call its `to_sled()` method.
 
@@ -13,16 +14,14 @@ Approach #2 may be useful if you want to set a configuration once
 and reuse that for serialization multiple times.
 
 ```python
-from parsled import SledSerializerMini, to_sled_mini
-
 data = {}
 other_data = {}
 
 # Approach #1
-sled_output = to_sled_mini(data)
+sled_output = parsled.to_sled_mini(data)
 
 # Approach #2
-serializer = SledSerializerMini()
+serializer = parsled.SledSerializerMini()
 sled_output = serializer.to_sled(data)
 other_sled_output = serializer.to_sled(other_data)
 ```
