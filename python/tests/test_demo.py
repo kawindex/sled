@@ -25,7 +25,7 @@ class TestDemo:
                 expected_data={
                     "name": "John Doe",
                     "age": 50,
-                    "children": ["Jane", "Jimmy"],
+                    "children": ["Jack", "Jill"],
                 },
             ),
             DemoTestCase(
@@ -33,7 +33,7 @@ class TestDemo:
                 expected_data={
                     "name": "John Doe",
                     "age": 50,
-                    "children": ["Jane", "Jimmy"],
+                    "children": ["Jack", "Jill"],
                 },
             ),
         ),
