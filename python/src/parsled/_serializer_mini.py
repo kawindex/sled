@@ -88,14 +88,14 @@ def to_sled_mini(
     data = {
         "name": "John Doe",
         "age": 50,
-        "children": ["Jane", "Jimmy"],
+        "children": ["Jack", "Jill"],
     }
     sled_output = to_sled_mini(data)
     ```
 
     Sled output:
     ```sled
-    name="John Doe";age=50;children=[Jane;Jimmy]
+    name="John Doe";age=50;children=[Jack;Jill]
     ```
     """
 
@@ -126,7 +126,7 @@ class SledSerializerMini(SledSerializerBasic):
     data = {
         "name": "John Doe",
         "age": 50,
-        "children": ["Jane", "Jimmy"],
+        "children": ["Jack", "Jill"],
     }
     sled_serializer = SledSerializer()
     sled_output = sled_serializer.to_sled(data)
@@ -134,7 +134,7 @@ class SledSerializerMini(SledSerializerBasic):
 
     Sled output:
     ```sled
-    name="John Doe";age=50;children=[Jane;Jimmy]
+    name="John Doe";age=50;children=[Jack;Jill]
     ```
     """
 

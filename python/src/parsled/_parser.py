@@ -5,7 +5,7 @@ To parse a `str` of Sled into a Python `dict`, call `from_sled()`.
 sled_text = '''
 name = "John Doe"
 age = 50
-children = [Jane ; Jimmy]
+children = [Jack ; Jill]
 '''
 
 data = parsled.from_sled(sled_text)
@@ -13,7 +13,7 @@ data = parsled.from_sled(sled_text)
 assert data == {
     "name": "John Doe",
     "age": 50,
-    "children": ["Jane", "Jimmy"],
+    "children": ["Jack", "Jill"],
 }
 ```
 
