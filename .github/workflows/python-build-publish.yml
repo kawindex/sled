@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 env:
   UV_MANAGED_PYTHON: true
-  USE_UV_VERSION: '0.10.12'
+  USE_UV_VERSION: '0.11.6'
 
 jobs:
   invoke-python-test:
