@@ -1,6 +1,6 @@
 # Sled grammar
 
-```title="Context-free grammar"
+```title="Context-free grammar" linenums="1"
 sled
     optional_ws_or_delimiters smap_content
     optional_ws smap optional_ws
