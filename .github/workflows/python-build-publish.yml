@@ -117,7 +117,7 @@ jobs:
           "${GITHUB_WORKSPACE}/python/scripts/smoke_test.py"
 
   python-publish:
-    name: Python publish to PyPI test
+    name: Python publish to PyPI
     needs: python-test-distribution
     runs-on: ubuntu-latest
     environment:
