@@ -1,5 +1,5 @@
 """
-Minified serialization for a more compact but less human-friendly output.
+Minified serialization produces a more compact but less human-friendly output.
 
 The interface is analogous to `to_sled()` and `SledSerializer` respectively.
 
