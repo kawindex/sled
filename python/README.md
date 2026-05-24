@@ -9,7 +9,7 @@ Sled is a serialization language for developer-friendly reading and writing.
 
 `parsled` is available on PyPI.
 You can install it using your preferred Python package manager.
-E.g.
+For example:
 ```sh
 pip install parsled
 ```
@@ -17,7 +17,7 @@ pip install parsled
 
 ## Parse: Sled to Python `dict`
 
-To parse a `str` of Sled into a Python `dict`, call `from_sled()`.
+To parse a `str` of Sled into a Python `dict`, call [`from_sled()`](https://parsled.readthedocs.io/en/stable/api/#parsled._parser.from_sled).
 
 ```python
 sled_text = '''
@@ -35,7 +35,7 @@ assert data == {
 }
 ```
 
-To parse a Sled file, read it to a `str`, then pass that into `from_sled()`.
+To parse a Sled file, read it to a `str`, then pass that into [`from_sled()`](https://parsled.readthedocs.io/en/stable/api/#parsled._parser.from_sled).
 ```python
 with open("path/to/my_file.sled", mode="r") as f:
     sled_text = f.read()
@@ -47,11 +47,11 @@ with open("path/to/my_file.sled", mode="r") as f:
 
 We have 2 main ways to serialize Python objects.
 
-1. Call `to_sled()`.
-2. Instantiate a `SledSerializer` and call its `to_sled()` method.
+1. Call [`to_sled()`](https://parsled.readthedocs.io/en/stable/api/#parsled.to_sled).
+2. Instantiate a [`SledSerializer`](https://parsled.readthedocs.io/en/stable/api/#parsled.SledSerializer) and call its [`to_sled()`](https://parsled.readthedocs.io/en/stable/api/#parsled.SledSerializer.to_sled) method.
 
 Both have the same configuration options and defaults.
-For details, refer to the `SledSerializer` documentation.
+For details, refer to the [`SledSerializer` documentation](https://parsled.readthedocs.io/en/stable/api/#parsled.SledSerializer).
 
 Approach #1 simply does approach #2 under the hood.
 Approach #2 may be useful if you want to set a configuration once
