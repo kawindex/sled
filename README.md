@@ -7,7 +7,7 @@ Sled is intended to be simple and convenient for a human (and maybe AI-augmented
 
 
 ## Quick links
-- [`parsled`](/python): a simple Python parser and serializer for Sled
+- [`parsled`](https://parsled.readthedocs.io): a simple Python parser and serializer for Sled
 - [grammar](/sled/grammar.md) and [spec](/sled/spec.md)
 
 

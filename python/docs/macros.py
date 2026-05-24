@@ -27,7 +27,7 @@ def assert_and_replace(
 def make_sled_intro() -> str:
     s1 = assert_and_replace(
         base=REPO_README_PATH.read_text(encoding="utf-8", errors="strict"),
-        target="[`parsled`](/python)",
+        target="[`parsled`](https://parsled.readthedocs.io)",
         replacement="[`parsled`](api.md)",
         count=1,
     )
