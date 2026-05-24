@@ -1,5 +1,6 @@
 [project]
 site_name = "Parsled"
+site_url = "https://parsled.readthedocs.io"
 site_description = "Python package for parsing Sled and serializing Python objects as Sled."
 site_author = "Kawin"
 copyright = "&copy; 2026 Kawin"
