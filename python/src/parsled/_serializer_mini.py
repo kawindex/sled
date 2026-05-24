@@ -74,7 +74,7 @@ def to_sled_mini(
 
     This function has the same configuration options and defaults
     as `SledSerializerMini`.
-    For details, refer to the `SledSerializerMini` documentation.
+    For details, refer to the `SledSerializerMini` documentation below.
 
     The input `obj` must be a `Mapping` or `dataclass` that does NOT have
     a `to_sled_serializable()` method, or an object with such a method

@@ -1,5 +1,5 @@
 """
-We have 2 ways to serialize Python objects.
+We have 2 main ways to serialize Python objects.
 
 1. Call `to_sled()`.
 2. Instantiate a `SledSerializer` and call its `to_sled()` method.
