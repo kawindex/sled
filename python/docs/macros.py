@@ -18,9 +18,10 @@ SERIALIZER_MINI_MODULE_DOCSTRING = inspect.getdoc(parsled._serializer_mini)
 
 
 def assert_and_replace(
-    base: str, target: str, replacement: str, count: int
+    base: str, target: str, replacement: str, count: int = 0
 ) -> str:
-    assert base.count(target) == count
+    if count > 0:
+        assert base.count(target) == count
     return base.replace(target, replacement)
 
 
@@ -48,9 +49,8 @@ def make_sled_intro() -> str:
 def define_env(env) -> None:
     env.variables["parsled_intro"] = assert_and_replace(
         base=PYTHON_README_PATH.read_text(encoding="utf-8", errors="strict"),
-        target="`SledSerializer` documentation",
-        replacement="[`SledSerializer` documentation](api.md#parsled.SledSerializer)",
-        count=1,
+        target="https://parsled.readthedocs.io/en/stable/api/",
+        replacement="api.md",
     )
 
     env.variables["sled_intro"] = make_sled_intro()
@@ -58,7 +58,10 @@ def define_env(env) -> None:
     env.variables["serialization_docstring"] = assert_and_replace(
         base=SERIALIZER_MODULE_DOCSTRING,
         target="`SledSerializer` documentation",
-        replacement="[`SledSerializer` documentation](api.md#parsled.SledSerializer)",
+        replacement=(
+            "[`SledSerializer` documentation]"
+            "(api.md#parsled.SledSerializer)"
+        ),
         count=1,
     )
 
@@ -69,7 +72,9 @@ def define_env(env) -> None:
         count=1,
     )
 
-    env.variables["sled_grammar"] = SLED_GRAMMAR_PATH.read_text(encoding="utf-8", errors="strict")
+    env.variables["sled_grammar"] = SLED_GRAMMAR_PATH.read_text(
+        encoding="utf-8", errors="strict"
+    )
 
     env.variables["sled_spec"] = assert_and_replace(
         base=SLED_SPEC_PATH.read_text(encoding="utf-8", errors="strict"),
